@@ -18,7 +18,30 @@ class Avtale():
         self.starttidspunkt = init_starttidspunkt
         self.varighet = init_varighet
         self.kategori = init_kategori
-        
+
+#Stedsklasse
+class Sted():
+    def __init__(self,init_id = "" ,init_navn = "",init_gateadresse = None,init_poststed = None,init_postnummer = None):
+        self.id = init_id
+        self.navn = init_navn
+        self.gateadresse = init_gateadresse
+        self.poststed = init_poststed
+        self.postnummer = init_postnummer
+    def __str__(self):
+        liste = [self.id,self.navn,self.gateadresse,self.poststed,self.postnummer]
+        ny_liste = []
+    
+        for i in liste:
+             if i != None:
+                ny_liste.append(i)
+        return f"{ny_liste}"
+
+#Unntakshåndtering
+class GatenavnError(Exception):
+    pass
+class EtternavnError(Exception):
+    pass     
+
 #Avtale streng __str__
     def __str__(self):
         return f"{self.tittel}, {self.sted}, {self.starttidspunkt}, {self.varighet} min, {self.kategori}"
@@ -43,7 +66,32 @@ def liste_filter(avtale_liste):
             for i in avtale_liste:
                 df = pd.DataFrame([[i.tittel, i.sted, str(i.starttidspunkt), i.varighet, i.kategori]], columns=('tittel','sted','starttidspunkt','varighet','kategori'))
                 data_frame = data_frame.append([df], ignore_index=True)
-            return print("Søkeresultat som inneholder '%s': \n"%(lete_streng),data_frame[data_frame['%s'%(gyldige_kolonner[kolonne-1])].str.contains(lete_streng)])           
+            return print("Søkeresultat som inneholder '%s': \n"%(lete_streng),data_frame[data_frame['%s'%(gyldige_kolonner[kolonne-1])].str.contains(lete_streng)])
+
+#Denne funksjonen tar inn *etternavn, *gatenavn og *postnummer. Poststed og kommunenummer (id) er hentet fra et xlsx ark lastet ned fra bring.no
+postnummer_register_df = pd.read_excel('ressursfiler\Postnummerregister-Excel.xlsx', sheet_name=0)
+
+def nytt_sted():
+    while True:
+        try:
+            etternavn = input('Skriv inn etternavn: ')
+            gatenavn = input('Skriv inn gatenavn: ')
+            postnummer = int(input('Skriv inn postnummer: '))
+            poststed = postnummer_register_df[(postnummer_register_df['Postnummer'] == postnummer)]['Poststed'].item()
+            kommunenummer = postnummer_register_df[(postnummer_register_df['Postnummer'] == postnummer)]['Kommunenummer'].item()
+            if etternavn.isalpha() is not True:
+                raise EtternavnError
+            elif gatenavn.isalpha() is not True:
+                raise GatenavnError
+        except EtternavnError:
+            print('Vennligst skriv inn et gyldig etternavn. ')
+        except GatenavnError:
+            print('Vennligst skriv inn et gyldig gatenavn. ')
+        except ValueError:
+            print('Vennligst skriv inn et gyldig postnummer. ')
+        else:
+            break
+    return Sted(kommunenummer, etternavn, gatenavn, poststed, postnummer)
     
     
 
@@ -272,27 +320,12 @@ def hovedmeny(start):
             redigere_avtale()
         elif valg==7:
             liste_filter(liste)
-        elif valg==8:
-            legg_til_kategori()
+        #elif valg==8:
+            #legg_til_kategori()
         elif valg==9:
-            legg_til_sted()
+            print(nytt_sted())
         else:
             print("Ugyldig svar, vennligst bruk 1-6")
 hovedmeny(1)
 
-class sted():
-    def __init__(self,init_id = "" ,init_navn = "",init_gateadresse = None,init_poststed = None,init_postnummer = None):
-        self.id = init_id
-        self.navn = init_navn
-        self.gateadresse = init_gateadresse
-        self.poststed = init_poststed
-        self.postnummer = init_postnummer
-    def __str__(self):
-        liste = [self.id,self.navn,self.gateadresse,self.poststed,self.postnummer]
-        ny_liste = []
-    
-        for i in liste:
-             if i != None:
-                ny_liste.append(i)
-        return f"{ny_liste}"
 

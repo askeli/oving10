@@ -18,12 +18,32 @@ class GatenavnError(Exception):
 class EtternavnError(Exception):
     pass
 
+## START TORBJØRN ( KUN FOR TESTING )
+
+class Sted():
+    def __init__(self,init_id = "" ,init_navn = "",init_gateadresse = None,init_poststed = None,init_postnummer = None):
+        self.id = init_id
+        self.navn = init_navn
+        self.gateadresse = init_gateadresse
+        self.poststed = init_poststed
+        self.postnummer = init_postnummer
+    def __str__(self):
+        liste = [self.id,self.navn,self.gateadresse,self.poststed,self.postnummer]
+        ny_liste = []
+    
+        for i in liste:
+             if i != None:
+                ny_liste.append(i)
+        return f"{ny_liste}"
+
+## SLUTT TORBJØRN
+
+#Denne funksjonen tar inn *etternavn, *gatenavn og *postnummer. Poststed og kommunenummer (id) er hentet fra et xlsx ark lastet ned fra bring.no
 postnummer_register_df = pd.read_excel('ressursfiler\Postnummerregister-Excel.xlsx', sheet_name=0)
 
 def nytt_sted():
     while True:
         try:
-            #kommunenummer = input('Skriv inn steds-id: ')
             etternavn = input('Skriv inn etternavn: ')
             gatenavn = input('Skriv inn gatenavn: ')
             postnummer = int(input('Skriv inn postnummer: '))
@@ -40,12 +60,11 @@ def nytt_sted():
         except ValueError:
             print('Vennligst skriv inn et gyldig postnummer. ')
         else:
-            print(kommunenummer, etternavn, gatenavn, postnummer, poststed)
             break
-    return 
+    return Sted(kommunenummer, etternavn, gatenavn, poststed, postnummer)
 
  
 
 
-nytt_sted()
+print(nytt_sted())
 
