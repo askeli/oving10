@@ -88,9 +88,19 @@ def åpne_kategori():
 
 
 #Funksjon for å skrive ut lister
-def skriv_ut_alle(listevalg,liste):  
+def skriv_ut_alle():
+    global kategori_liste
+    global avtale_liste
+    global sted_liste
+    
+    print("print ut liste:")
+    print("1: kategori")
+    print("2: avtale")
+    print("3: sted")
+    valg = int(input("valg = "))
     #kategori liste
-    if listevalg == 'kategori':
+    if valg == 1:
+        liste = kategori_liste
         df_liste = pd.DataFrame(columns = ['ID','navn','prioritet'])  
         for i in liste:
             df = pd.DataFrame([[i.id,i.navn,i.prioritet]], columns=(['ID','navn','prioritet']))
@@ -99,7 +109,8 @@ def skriv_ut_alle(listevalg,liste):
         print(df_liste) 
     
     #avtale liste
-    elif listevalg == 'avtale': 
+    elif valg == 2: 
+        liste = avtale_liste
         df_liste = pd.DataFrame(columns = ['tittel','sted','starttidspunkt','varighet','kategori'])  
         for i in liste:
             df = pd.DataFrame([[i.tittel,i.sted,str(i.starttidspunkt),i.varighet,i.kategori]], columns=('tittel','sted','starttidspunkt','varighet','kategori'))
@@ -108,15 +119,18 @@ def skriv_ut_alle(listevalg,liste):
         print(df_liste)
         
     #sted liste    
-    elif listevalg == 'sted':
-        df_liste = pd.DataFrame(columns = ['gateadresse','postnummer','sted'])  
+    elif valg == 3:
+        liste = sted_liste
+        df_liste = pd.DataFrame(columns = ['id','navn','gateadresse','poststed','postnummer'])  
         for i in liste:
-            df = pd.DataFrame([[i.gateadresse,i.postnummer,i.poststed]], columns=('gateadresse','postnummer','sted'))
+            df = pd.DataFrame([[i.id, i.navn, i.gateadresse,i.poststed,i.postnummer]], columns=('id','navn','gateadresse','poststed','postnummer'))
             df_liste = df_liste.append([df], ignore_index=True)
         print("Utskrift sted")
         print(df_liste)
     else:
-        print("ikke en definert liste")
+        print("ikke et definert valg")
+
+
 
 
 

@@ -279,3 +279,20 @@ def hovedmeny(start):
         else:
             print("Ugyldig svar, vennligst bruk 1-6")
 hovedmeny(1)
+
+class sted():
+    def __init__(self,init_id = "" ,init_navn = "",init_gateadresse = None,init_poststed = None,init_postnummer = None):
+        self.id = init_id
+        self.navn = init_navn
+        self.gateadresse = init_gateadresse
+        self.poststed = init_poststed
+        self.postnummer = init_postnummer
+    def __str__(self):
+        liste = [self.id,self.navn,self.gateadresse,self.poststed,self.postnummer]
+        ny_liste = []
+    
+        for i in liste:
+             if i != None:
+                ny_liste.append(i)
+        return f"{ny_liste}"
+
