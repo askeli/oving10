@@ -63,8 +63,10 @@ def nytt_sted():
             break
     return Sted(kommunenummer, etternavn, gatenavn, poststed, postnummer)
 
- 
-
-
 print(nytt_sted())
 
+
+#o
+#   Lag et nytt menyvalg i menysystemet for å legge en kategori til en avtale. Funksjonen skal 
+#   skrive ut kategori-lista og la brukeren velge hvilken kategori ved å oppgi indeksen til 
+#   kategorien i lista.
