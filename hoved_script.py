@@ -392,6 +392,7 @@ def hovedmeny(start):
         print("9: Legg til sted")
         print("10: Lagre kategorifil")
         print("11: Åpne kategorifil")
+        print("12: Skriv ut kategori")
         print("0: Jeg vil avslutte")
         valg=int(input("Velg et alternativ: "))
         if valg==1:
@@ -416,10 +417,8 @@ def hovedmeny(start):
             lagre_kategorifil()
         elif valg==11:
             åpne_kategori()
-            
+        elif valg == 12:
+            print(*kategori_liste)
         else:
             print("Ugyldig svar, vennligst bruk 1-6")
 hovedmeny(1)
-
-
-$$$
