@@ -221,7 +221,7 @@ def ny_avtale_til_meny():
     
 #Funksjon for å lage en ny kategori 
 def legg_til_kategori():
-        print("Du har valgt: 8: Legg til kategori")
+    print("Du har valgt: 8: Legg til kategori")
     fortsette_tilbake = input("For å fortsette, tast 1, hvis du ønsker å gå tilbake til hovedmenyen, tast 0 :")
     if fortsette_tilbake == "0":
         hovedmeny()
