@@ -422,3 +422,4 @@ def hovedmeny(start):
 hovedmeny(1)
 
 
+$$$
