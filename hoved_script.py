@@ -364,15 +364,17 @@ def redigere_avtale():
         hovedmeny(1)
     else:
         pass
-    global avtale_liste
-    for i in range(len(avtale_liste)):
-        print(i,avtale_liste[i].tittel," - ",avtale_liste[i].__str__())
+    global liste
+    for i in range(len(liste)):
+        print(i,liste[i].tittel," - ",liste[i].__str__())
     indeks = int(input("Hvilken avtale vil du redigere?"))
     ny = ny_avtale()
     #if hva == 1:
         #ny = input("Hva vil du redigere til: ")
-        #avtale_liste[int(indeks)].tittel
-    avtale_liste = avtale_liste[:indeks]+[ny]
+        #liste[int(indeks)].tittel
+    
+    liste[indeks] = ny
+    
     input("Avtale redigert, trykk ENTER for å gå tilbake til hovedmenyen")
     hovedmeny(1)
 
