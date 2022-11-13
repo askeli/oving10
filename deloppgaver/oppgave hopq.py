@@ -70,3 +70,11 @@ print(nytt_sted())
 #   Lag et nytt menyvalg i menysystemet for å legge en kategori til en avtale. Funksjonen skal 
 #   skrive ut kategori-lista og la brukeren velge hvilken kategori ved å oppgi indeksen til 
 #   kategorien i lista.
+
+
+
+
+#p
+#   Lag et menyvalg for å finne alle avtaler som foregår på et bestemt sted. Skriv ut lista over 
+#   steder. Gå gjennom alle avtalene og sjekk stedet den foregår på. Skriv ut avtalen hvis den 
+#   foregår på det angitte stedet.
