@@ -166,54 +166,8 @@ def avtaler_til_fil():
     input("For å gå tilbake til hovedmenyen, trykk ENTER")
     hovedmeny(1)
     
-def ny_avtale():
-    bekreftet = "" 
-    while bekreftet != "Ja":
-            tittel = input("Rediger avtale\nOppgi tittel:")
-            sted = input("Oppgi sted:")
-            print("Oppgi tidpunkt(ÅÅÅÅ-MM-DD TT:MM:SS):")
-            starttidspunkt = ""
-
-            while starttidspunkt == "":
-                try:
-                    starttidspunkt = datetime(int(input("ÅÅÅÅ:")),int(input("MM:")),int(input("DD:")),int(input("TT:")),int(input("MM:")))                
-                    if starttidspunkt < datetime.now():
-                        print("Dato utgått! Vennligst oppgi på nytt.")
-                        starttidspunkt = ""
-                except ValueError:
-                    print("Ikke en gyldig dato!")
-
-            varighet = input("Oppgi varighet:")
-            while varighet != type(int):
-                try:
-                    varighet = int(varighet)
-                    break
-                except ValueError:
-                    print("Ikke et gyldig tall!")
-                    varighet = input("Oppgi varighet:")
-
-            kategori = input("Oppgi kategori:")
 
 
-            print("Bekreft ", Avtale(tittel,sted, starttidspunkt, varighet, kategori))
-            bekreftet = input("Ja/Nei:").casefold()        
-            if "ja" in bekreftet:
-
-                dict_liste[tittel]=Avtale(tittel,sted, starttidspunkt, varighet, kategori)
-                avtale_liste.append(Avtale(tittel,sted, starttidspunkt, varighet, kategori))
-
-                return(Avtale(tittel,sted, starttidspunkt, varighet, kategori))
-                break
-            else:
-                print("Skriv avtalen på nytt.")
-                continue    
-                
-    input("For å gå tilbake til hovedmenyen, trykk ENTER")
-    hovedmeny(1)
-
-
-'''
-########## Ke e vits med denne???? når me he den rett oppforbi?
 def ny_avtale_til_meny():
     print("Du har valgt: 3: Skriv inn en ny avtale")
     fortsette_tilbake = input("For å fortsette, trykk ENTER, hvis du ønsker å gå tilbake til hovedmenyen, tast 0 :")
@@ -254,7 +208,7 @@ def ny_avtale_til_meny():
             if "ja" in bekreftet:
 
                 dict_liste[tittel]=Avtale(tittel,sted, starttidspunkt, varighet, kategori)
-                liste.append(Avtale(tittel,sted, starttidspunkt, varighet, kategori))
+                avtale_liste.append(Avtale(tittel,sted, starttidspunkt, varighet, kategori))
 
                 return(Avtale(tittel,sted, starttidspunkt, varighet, kategori))
                 break
@@ -263,7 +217,7 @@ def ny_avtale_til_meny():
                 continue    
                 
         input("For å gå tilbake til hovedmenyen, trykk ENTER")#han som har lagd den my flytte denne på riktig plass, finner ikke ut av det
- '''   
+  
     
 #Funksjon for å lage en ny kategori 
 def legg_til_kategori():
@@ -457,7 +411,7 @@ def hovedmeny(start):
         elif valg==9:
             print(nytt_sted())
         elif valg==10:
-            lagre_kategori()
+            lagre_kategorifil()
         elif valg==11:
             åpne_kategori()
             
