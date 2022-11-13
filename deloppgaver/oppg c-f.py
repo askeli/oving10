@@ -34,7 +34,7 @@ kategori_liste=[]
 
 
 #Funksjon for å lage en ny kategori 
-def ny_kategori():
+def legg_til_kategori()():
     bruker_id = input("skriv inn id: ") 
     navn = input("skriv inn navn: ")
     prioritet = ""
@@ -61,11 +61,12 @@ def ny_kategori():
 
 
 #Funksjon for å lagre kategori liste til fil
-def lagre_kategorifil(liste):
+def lagre_kategorifil():
+    global kategori_liste
     filnavn = input("hva vil du kalle filen?")
     fil = open(filnavn+".txt", "w", encoding ="UTF8")
     df_liste = pd.DataFrame(columns = ['ID','navn','prioritet'])
-    for i in liste:
+    for i in kategori_liste:
         df = pd.DataFrame([[i.id,i.navn,i.prioritet]], columns=('ID','navn','prioritet'))
         df_liste = df_liste.append([df], ignore_index=True)
     fil.write(str(df_liste))
