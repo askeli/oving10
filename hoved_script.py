@@ -16,10 +16,15 @@ import csv
 import tkinter
 from tkinter import filedialog
 import os
+import webbrowser
 
 
 dict_liste = dict()  
 liste=[]
+
+avtale_liste=[]
+sted_liste=[]
+kategori_liste=[]
 
 
 #Klasse for ny avtale 
@@ -30,6 +35,24 @@ class Avtale():
         self.starttidspunkt = init_starttidspunkt
         self.varighet = init_varighet
         self.kategori = init_kategori
+
+#Avtale streng __str__
+    def __str__(self):
+        return f"{self.tittel}, {self.sted}, {self.starttidspunkt}, {self.varighet} min, {self.kategori}"
+
+#Klasse for kategori 
+class Kategori():
+    def __init__(self, start_id = "", start_navn = "", start_prioritet = 1):
+        self.id = start_id
+        self.navn = start_navn
+        self.prioritet = start_prioritet
+        
+
+#Kategori streng __str__
+    def __str__(self):
+        return f"{self.id}, {self.navn}, {self.prioritet}"
+  
+
 
 #Stedsklasse
 class Sted():
@@ -54,9 +77,7 @@ class GatenavnError(Exception):
 class EtternavnError(Exception):
     pass     
 
-#Avtale streng __str__
-    def __str__(self):
-        return f"{self.tittel}, {self.sted}, {self.starttidspunkt}, {self.varighet} min, {self.kategori}"
+
 
 
 #filterfunksjon for liste
@@ -179,7 +200,7 @@ def ny_avtale():
             if "ja" in bekreftet:
 
                 dict_liste[tittel]=Avtale(tittel,sted, starttidspunkt, varighet, kategori)
-                liste.append(Avtale(tittel,sted, starttidspunkt, varighet, kategori))
+                avtale_liste.append(Avtale(tittel,sted, starttidspunkt, varighet, kategori))
 
                 return(Avtale(tittel,sted, starttidspunkt, varighet, kategori))
                 break
@@ -189,7 +210,10 @@ def ny_avtale():
                 
     input("For å gå tilbake til hovedmenyen, trykk ENTER")
     hovedmeny(1)
-    
+
+
+'''
+########## Ke e vits med denne???? når me he den rett oppforbi?
 def ny_avtale_til_meny():
     print("Du har valgt: 3: Skriv inn en ny avtale")
     fortsette_tilbake = input("For å fortsette, trykk ENTER, hvis du ønsker å gå tilbake til hovedmenyen, tast 0 :")
@@ -239,34 +263,128 @@ def ny_avtale_til_meny():
                 continue    
                 
         input("For å gå tilbake til hovedmenyen, trykk ENTER")#han som har lagd den my flytte denne på riktig plass, finner ikke ut av det
+ '''   
     
+#Funksjon for å lage en ny kategori 
+def legg_til_kategori():
+        print("Du har valgt: 8: Legg til kategori")
+    fortsette_tilbake = input("For å fortsette, tast 1, hvis du ønsker å gå tilbake til hovedmenyen, tast 0 :")
+    if fortsette_tilbake == "0":
+        hovedmeny()
+    else:
+        pass
+        bruker_id = input("skriv inn id: ") 
+        navn = input("skriv inn navn: ")
+        prioritet = ""
+        while prioritet == "":
+            prioritet = input("skriv inn prioritet(1-2-3): ")
+            try:
+                prioritet = int(prioritet)
+                if prioritet < 1 or prioritet > 3:
+                    prioritet = ""
+                    raise ValueError                
+            except ValueError:
+                prioritet = ""
+                print("ikke et gyldig tall")
+
+        print("Bekreft kategori: ", Kategori(bruker_id, navn, prioritet))
+        bekreftet = input("Ja/Nei:").casefold()  
+        if "ja" in bekreftet:
+            print("kategori lagret")
+            kategori_liste.append(Kategori(bruker_id, navn, prioritet))            
+            return (Kategori(bruker_id, navn, prioritet))
+        else:
+            print("kategori ikke lagret")
+        
+
+#Funksjon for å lagre kategori liste til fil
+def lagre_kategorifil():
+    print("Du har valgt: 10: Lagre kategorifil")
+    fortsette_tilbake = input("For å fortsette, tast 1, hvis du ønsker å gå tilbake til hovedmenyen, tast 0 :")
+    if fortsette_tilbake == "0":
+        hovedmeny()
+    else:
+        pass
+        global kategori_liste
+        filnavn = input("hva vil du kalle filen?")
+        fil = open(filnavn+".txt", "w", encoding ="UTF8")
+        df_liste = pd.DataFrame(columns = ['ID','navn','prioritet'])
+        for i in kategori_liste:
+            df = pd.DataFrame([[i.id,i.navn,i.prioritet]], columns=('ID','navn','prioritet'))
+            df_liste = df_liste.append([df], ignore_index=True)
+        fil.write(str(df_liste))
+        fil.close()
+
     
+
+#Funksjon for å åpne kategori liste fra fil
+def åpne_kategori():
+    print("Du har valgt: 11: Åpne kategorifil")
+    fortsette_tilbake = input("For å fortsette, tast 1, hvis du ønsker å gå tilbake til hovedmenyen, tast 0 :")
+    if fortsette_tilbake == "0":
+        hovedmeny()
+    else:
+        pass    
+        filnavn = input("Hvilken fil vil du åpne?")
+        try:
+            fil = open(filnavn+".txt", "r", encoding ="UTF8")
+            webbrowser.open(filnavn+".txt")
+            for i in fil:
+                print(i)
+            fil.close()    
+        except FileNotFoundError:
+            print("filen finnes ikke")  
     
-    
-    
-    
-def skriv_ut_alle_avtaler():
+
+#Funksjon for å skrive ut lister
+def skriv_ut_alle():
     print("Du har valgt: 4: Skriv ut alle avtalene")
     fortsette_tilbake = input("For å fortsette, tast 1, hvis du ønsker å gå tilbake til hovedmenyen, tast 0 :")
     if fortsette_tilbake == "0":
         hovedmeny()
     else:
         pass
-        df_liste = pd.DataFrame(columns = ['tittel','sted','starttidspunkt','varighet','kategori'])  
-        for i in liste:
-            df = pd.DataFrame([[i.tittel,i.sted,str(i.starttidspunkt),i.varighet,i.kategori]], columns=('tittel','sted','starttidspunkt','varighet','kategori'))
-            df_liste = df_liste.append([df], ignore_index=True)
+        global kategori_liste
+        global avtale_liste
+        global sted_liste
 
-        print("Utskrift liste")
-        print(df_liste) 
-        input("For å gå tilbake til hovedmenyen, trykk ENTER")
-        hovedmeny(1)   
-    
-    
-    
-    
-    
-    
+        print("print ut liste:")
+        print("1: kategori")
+        print("2: avtale")
+        print("3: sted")
+        valg = int(input("valg = "))
+        #kategori liste
+        if valg == 1:
+            liste = kategori_liste
+            df_liste = pd.DataFrame(columns = ['ID','navn','prioritet'])  
+            for i in liste:
+                df = pd.DataFrame([[i.id,i.navn,i.prioritet]], columns=(['ID','navn','prioritet']))
+                df_liste = df_liste.append([df], ignore_index=True) 
+            print("Utskrift kategori")
+            print(df_liste) 
+
+        #avtale liste
+        elif valg == 2: 
+            liste = avtale_liste
+            df_liste = pd.DataFrame(columns = ['tittel','sted','starttidspunkt','varighet','kategori'])  
+            for i in liste:
+                df = pd.DataFrame([[i.tittel,i.sted,str(i.starttidspunkt),i.varighet,i.kategori]], columns=('tittel','sted','starttidspunkt','varighet','kategori'))
+                df_liste = df_liste.append([df], ignore_index=True)
+            print("Utskrift Avtaler")
+            print(df_liste)
+
+        #sted liste    
+        elif valg == 3:
+            liste = sted_liste
+            df_liste = pd.DataFrame(columns = ['id','navn','gateadresse','poststed','postnummer'])  
+            for i in liste:
+                df = pd.DataFrame([[i.id, i.navn, i.gateadresse,i.poststed,i.postnummer]], columns=('id','navn','gateadresse','poststed','postnummer'))
+                df_liste = df_liste.append([df], ignore_index=True)
+            print("Utskrift sted")
+            print(df_liste)
+        else:
+            print("ikke et definert valg")
+ 
     
 def slette_avtale():
     print("Du har valgt: 5: Slette en avtale")
@@ -275,11 +393,11 @@ def slette_avtale():
         hovedmeny(1)
     else:
         pass
-    global liste
-    for i in range(len(liste)):
-        print(i,liste[i].tittel," - ",liste[i].__str__())
+    global avtale_liste
+    for i in range(len(avtale_liste)):
+        print(i,avtale_liste[i].tittel," - ",avtale_liste[i].__str__())
     indeks = int(input("Hvilken avtale vil du slette: "))
-    del liste[indeks]
+    del avtale_liste[indeks]
     input("Avtale slettet, trykk ENTER for å gå tilbake til hovedmenyen")
 
     hovedmeny(1)
@@ -292,15 +410,15 @@ def redigere_avtale():
         hovedmeny(1)
     else:
         pass
-    global liste
-    for i in range(len(liste)):
-        print(i,liste[i].tittel," - ",liste[i].__str__())
+    global avtale_liste
+    for i in range(len(avtale_liste)):
+        print(i,avtale_liste[i].tittel," - ",avtale_liste[i].__str__())
     indeks = int(input("Hvilken avtale vil du redigere?"))
     ny = ny_avtale()
     #if hva == 1:
         #ny = input("Hva vil du redigere til: ")
-        #liste[int(indeks)].tittel
-    liste = liste[:indeks]+[ny]
+        #avtale_liste[int(indeks)].tittel
+    avtale_liste = avtale_liste[:indeks]+[ny]
     input("Avtale redigert, trykk ENTER for å gå tilbake til hovedmenyen")
     hovedmeny(1)
 
@@ -316,6 +434,8 @@ def hovedmeny(start):
         print("7: Søke i avtaler")
         print("8: Legg til kategori")
         print("9: Legg til sted")
+        print("10: Lagre kategorifil")
+        print("11: Åpne kategorifil")
         print("0: Jeg vil avslutte")
         valg=int(input("Velg et alternativ: "))
         if valg==1:
@@ -325,17 +445,22 @@ def hovedmeny(start):
         elif valg ==3:
             ny_avtale_til_meny()
         elif valg==4:
-            skriv_ut_alle_avtaler()
+            skriv_ut_alle()
         elif valg==5:
             slette_avtale()
         elif valg==6:
             redigere_avtale()
         elif valg==7:
-            liste_filter(liste)
-        #elif valg==8:
-            #legg_til_kategori()
+            liste_filter(avtale_liste)
+        elif valg==8:
+            legg_til_kategori()
         elif valg==9:
             print(nytt_sted())
+        elif valg==10:
+            lagre_kategori()
+        elif valg==11:
+            åpne_kategori()
+            
         else:
             print("Ugyldig svar, vennligst bruk 1-6")
 hovedmeny(1)
