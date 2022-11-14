@@ -71,6 +71,7 @@ class Sted():
                 ny_liste.append(i)
         return f"{ny_liste}"
 
+#Christoffer
 #Unntakshåndtering
 class GatenavnError(Exception):
     pass
@@ -79,7 +80,7 @@ class EtternavnError(Exception):
 
 
 
-
+#Christoffer
 #filterfunksjon for liste
 def liste_filter(avtale_liste):
     gyldige_kolonner = ["tittel", "sted", "starttidspunkt", "varighet", "kategori"]
@@ -101,6 +102,7 @@ def liste_filter(avtale_liste):
                 data_frame = data_frame.append([df], ignore_index=True)
             return print("Søkeresultat som inneholder '%s': \n"%(lete_streng),data_frame[data_frame['%s'%(gyldige_kolonner[kolonne-1])].str.contains(lete_streng)])
 
+#Christoffer
 #Denne funksjonen tar inn *etternavn, *gatenavn og *postnummer. Poststed og kommunenummer (id) er hentet fra et xlsx ark lastet ned fra bring.no
 postnummer_register_df = pd.read_excel('ressursfiler\Postnummerregister-Excel.xlsx', sheet_name=0)
 
@@ -125,8 +127,43 @@ def nytt_sted():
         else:
             break
     return Sted(kommunenummer, etternavn, gatenavn, poststed, postnummer)
+
+#Christoffer
+#Denne funksjonen gir et avtale-objekt ny kategori
+#Listene er laget lokalt, siden skriv_ut_alle funksjonen ikke tillater utskrift fra individ. lister.
+def ny_kategori_til_avtale():
+    print('...\nLegge til ny kategori til avtale\n...\n')
+    #Avtale liste kopi
+    liste1 = avtale_liste
+    df_liste_avtale = pd.DataFrame(columns = ['tittel','sted','starttidspunkt','varighet','kategori'])  
+    for i in liste1:
+        df1 = pd.DataFrame([[i.tittel,i.sted,str(i.starttidspunkt),i.varighet,i.kategori]], columns=('tittel','sted','starttidspunkt','varighet','kategori'))
+        df_liste_avtale = df_liste_avtale.append([df1], ignore_index=True)
+
+    #Kategori liste kopi
+    liste2 = kategori_liste
+    df_liste_kategori = pd.DataFrame(columns = ['ID','navn','prioritet'])  
+    for i in liste2:
+        df2 = pd.DataFrame([[i.id,i.navn,i.prioritet]], columns=(['ID','navn','prioritet']))
+        df_liste_kategori = df_liste_kategori.append([df2], ignore_index=True) 
+
+    try:
+        print(df_liste_avtale)
+        avtale_indeks = (int(input('Hvilken avtale ønsker du å endre?\n> ')))
+        print(df_liste_kategori)
+        kategori_indeks = (int(input('Hvilken kategori ønsker du å endre?\n> ')))
+    except ValueError:
+        print('Skriv inn en gyldig indeksverdi')
+    else:
+        gammel_tittel = df_liste_avtale.iloc[avtale_indeks]['tittel']
+        gammel_sted = df_liste_avtale.iloc[avtale_indeks]['sted']
+        gammel_starttidspunkt = df_liste_avtale.iloc[avtale_indeks]['starttidspunkt']
+        gammel_varighet = df_liste_avtale.iloc[avtale_indeks]['varighet']
+        ny_kategori = kategori_liste[kategori_indeks]
+        avtale_liste[avtale_indeks] = Avtale(gammel_tittel, gammel_sted, gammel_starttidspunkt, gammel_varighet, ny_kategori)
     
-    
+
+
 
 
         
@@ -381,6 +418,7 @@ def redigere_avtale():
 def hovedmeny(start):
     os.system('cls')                 
     while start == 1:
+        print('\nDAT 120 Øving 10 [14.11.2022]\n')
         print("1: Les inn avtaler fra fil")
         print("2: Skriv avtalene til fil")
         print("3: Skriv inn en ny avtale")
@@ -392,9 +430,9 @@ def hovedmeny(start):
         print("9: Legg til sted")
         print("10: Lagre kategorifil")
         print("11: Åpne kategorifil")
-        print("12: Skriv ut kategori")
-        print("0: Jeg vil avslutte")
-        valg=int(input("Velg et alternativ: "))
+        print("12: Endre kategori til avtale")
+        print("0: Avslutt")
+        valg=int(input("\nSkriv inn ønsket handling [1-12]:\n> "))
         if valg==1:
             avtaler_fra_fil()
         elif valg==2:
@@ -418,7 +456,7 @@ def hovedmeny(start):
         elif valg==11:
             åpne_kategori()
         elif valg == 12:
-            print(*kategori_liste)
+            ny_kategori_til_avtale()
         else:
             print("Ugyldig svar, vennligst bruk 1-6")
 hovedmeny(1)

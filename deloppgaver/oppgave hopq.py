@@ -70,9 +70,42 @@ print(nytt_sted())
 #   Lag et nytt menyvalg i menysystemet for å legge en kategori til en avtale. Funksjonen skal 
 #   skrive ut kategori-lista og la brukeren velge hvilken kategori ved å oppgi indeksen til 
 #   kategorien i lista.
+indexfortest = input('Skriv inn index til avtalen som skal endres: ')
+indexfortest = (indexfortest-1)
 
 
 
+def ny_kategori_til_avtale():
+    
+    #Avtale liste kopi
+    liste1 = avtale_liste
+    df_liste_avtale = pd.DataFrame(columns = ['tittel','sted','starttidspunkt','varighet','kategori'])  
+    for i in liste1:
+        df1 = pd.DataFrame([[i.tittel,i.sted,str(i.starttidspunkt),i.varighet,i.kategori]], columns=('tittel','sted','starttidspunkt','varighet','kategori'))
+        df_liste_avtale = df_liste_avtale.append([df1], ignore_index=True)
+
+    #Kategori liste kopi
+    liste2 = kategori_liste
+    df_liste_kategori = pd.DataFrame(columns = ['ID','navn','prioritet'])  
+    for i in liste2:
+        df2 = pd.DataFrame([[i.id,i.navn,i.prioritet]], columns=(['ID','navn','prioritet']))
+        df_liste_kategori = df_liste_kategori.append([df2], ignore_index=True) 
+
+    try:
+        print(df_liste_avtale)
+        avtale_indeks = (int(input('Hvilken avtale ønsker du å endre?\n> ')))
+        print(df_liste_kategori)
+        kategori_indeks = (int(input('Hvilken kategori ønsker du å endre?\n> ')))
+    except ValueError:
+        print('Skriv inn en gyldig indeksverdi')
+    else:
+        gammel_tittel = df_liste_avtale.iloc[avtale_indeks]['tittel']
+        gammel_sted = df_liste_avtale.iloc[avtale_indeks]['sted']
+        gammel_starttidspunkt = df_liste_avtale.iloc[avtale_indeks]['starttidspunkt']
+        gammel_varighet = df_liste_avtale.iloc[avtale_indeks]['varighet']
+        ny_kategori = kategori_liste[kategori_indeks]
+        avtale_liste[avtale_indeks] = Avtale(gammel_tittel, gammel_sted, gammel_starttidspunkt, gammel_varighet, ny_kategori)
+    
 
 #p
 #   Lag et menyvalg for å finne alle avtaler som foregår på et bestemt sted. Skriv ut lista over 
