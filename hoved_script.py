@@ -107,11 +107,12 @@ def liste_filter(avtale_liste):
 postnummer_register_df = pd.read_excel('ressursfiler\Postnummerregister-Excel.xlsx', sheet_name=0)
 
 def nytt_sted():
+    print('\033[1m','\nLegge til nytt sted\n','\033[0m')
     while True:
         try:
-            etternavn = input('Skriv inn etternavn: ')
-            gatenavn = input('Skriv inn gatenavn: ')
-            postnummer = int(input('Skriv inn postnummer: '))
+            etternavn = input('Skriv inn etternavn:\n> ')
+            gatenavn = input('Skriv inn gatenavn:\n> ')
+            postnummer = int(input('Skriv inn postnummer:\n> '))
             poststed = postnummer_register_df[(postnummer_register_df['Postnummer'] == postnummer)]['Poststed'].item()
             kommunenummer = postnummer_register_df[(postnummer_register_df['Postnummer'] == postnummer)]['Kommunenummer'].item()
             if etternavn.isalpha() is not True:
@@ -127,6 +128,7 @@ def nytt_sted():
         else:
             break
     return Sted(kommunenummer, etternavn, gatenavn, poststed, postnummer)
+
 
 #Christoffer
 #Denne funksjonen gir et avtale-objekt ny kategori

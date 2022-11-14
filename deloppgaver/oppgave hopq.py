@@ -38,15 +38,17 @@ class Sted():
 
 ## SLUTT TORBJØRN
 
+#Christoffer
 #Denne funksjonen tar inn *etternavn, *gatenavn og *postnummer. Poststed og kommunenummer (id) er hentet fra et xlsx ark lastet ned fra bring.no
 postnummer_register_df = pd.read_excel('ressursfiler\Postnummerregister-Excel.xlsx', sheet_name=0)
 
 def nytt_sted():
+    print('\033[1m','\nLegge til nytt sted\n','\033[0m')
     while True:
         try:
-            etternavn = input('Skriv inn etternavn: ')
-            gatenavn = input('Skriv inn gatenavn: ')
-            postnummer = int(input('Skriv inn postnummer: '))
+            etternavn = input('Skriv inn etternavn:\n> ')
+            gatenavn = input('Skriv inn gatenavn:\n> ')
+            postnummer = int(input('Skriv inn postnummer:\n> '))
             poststed = postnummer_register_df[(postnummer_register_df['Postnummer'] == postnummer)]['Poststed'].item()
             kommunenummer = postnummer_register_df[(postnummer_register_df['Postnummer'] == postnummer)]['Kommunenummer'].item()
             if etternavn.isalpha() is not True:
@@ -62,9 +64,6 @@ def nytt_sted():
         else:
             break
     return Sted(kommunenummer, etternavn, gatenavn, poststed, postnummer)
-
-print(nytt_sted())
-
 
 #o
 #   Lag et nytt menyvalg i menysystemet for å legge en kategori til en avtale. Funksjonen skal 
