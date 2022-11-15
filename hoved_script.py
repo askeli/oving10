@@ -484,27 +484,32 @@ def hovedmeny(start):
         print('8: Importer kategori fra fil')
         print('9: Eksporter kategori til fil')
         print('0: Avslutt')
-        valg=int(input("\nSkriv inn ønsket handling [1-9]:\n> "))
-        if valg == 1:
-            ny_avtale_til_meny()
-        elif valg == 2:
-            skriv_ut_alle()
-        elif valg == 3:
-            liste_filter(avtale_liste)
-        elif valg == 4:
-            redigere_avtale()
-        elif valg == 5:
-            slette_avtale()
-        elif valg == 6:
-            filoperasjoner()
-        elif valg == 7:
-            avtaler_til_fil()
-        elif valg == 8:
-            åpne_kategori()
-        elif valg == 9:
-            lagre_kategorifil()
-        else:
-            print("Ugyldig svar, vennligst bruk 1-6")
+        try:
+            valg=int(input("\nSkriv inn ønsket handling [1-9]:\n> "))
+            if valg == 1:
+                ny_avtale_til_meny()
+            elif valg == 2:
+                skriv_ut_alle()
+            elif valg == 3:
+                liste_filter(avtale_liste)
+            elif valg == 4:
+                redigere_avtale()
+            elif valg == 5:
+                slette_avtale()
+            elif valg == 6:
+                filoperasjoner()
+            elif valg == 7:
+                avtaler_til_fil()
+            elif valg == 8:
+                åpne_kategori()
+            elif valg == 9:
+                lagre_kategorifil()
+            else:
+                print("Ugyldig svar, vennligst bruk 1-9")
+                input("")
+        except ValueError:
+            print("Ugyldig svar, vennligst bruk 1-9")
+            input("")            
 hovedmeny(1)
 
 
