@@ -157,13 +157,8 @@ def ny_kategori_til_avtale():
     except ValueError:
         print('Skriv inn en gyldig indeksverdi')
     else:
-        gammel_tittel = df_liste_avtale.iloc[avtale_indeks]['tittel']
-        gammel_sted = df_liste_avtale.iloc[avtale_indeks]['sted']
-        gammel_starttidspunkt = df_liste_avtale.iloc[avtale_indeks]['starttidspunkt']
-        gammel_varighet = df_liste_avtale.iloc[avtale_indeks]['varighet']
         ny_kategori = kategori_liste[kategori_indeks]
-        avtale_liste[avtale_indeks] = Avtale(gammel_tittel, gammel_sted, gammel_starttidspunkt, gammel_varighet, ny_kategori)
-    
+        avtale_liste[avtale_indeks].kategori = Avtale(kategori=ny_kategori)
 
 
 
@@ -245,7 +240,7 @@ def sted_til_fil():
 
 
 
-        
+def ny_avtale_til_meny():       
     print("Du har valgt: 3: Skriv inn en ny avtale")
     fortsette_tilbake = input("For å fortsette, trykk ENTER, hvis du ønsker å gå tilbake til hovedmenyen, tast 0 :")
     if fortsette_tilbake == "0":
