@@ -17,7 +17,7 @@ import tkinter
 from tkinter import filedialog
 import os
 import webbrowser
-
+import time
 
 dict_liste = dict()  
 liste=[]
@@ -25,6 +25,7 @@ liste=[]
 avtale_liste=[]
 sted_liste=[]
 kategori_liste=[]
+
 
 
 #Klasse for ny avtale 
@@ -162,29 +163,53 @@ def ny_kategori_til_avtale():
         ny_kategori = kategori_liste[kategori_indeks]
         avtale_liste[avtale_indeks].kategori = Avtale(kategori=ny_kategori)
 
+#Progressbar
+def progress_bar(iterable, prefix = '', suffix = '', decimals = 1, length = 100, fill = '█', printEnd = "\r"):
+    """
+    Call in a loop to create terminal progress bar
+    @params:
+        iterable    - Required  : iterable object (Iterable)
+        prefix      - Optional  : prefix string (Str)
+        suffix      - Optional  : suffix string (Str)
+        decimals    - Optional  : positive number of decimals in percent complete (Int)
+        length      - Optional  : character length of bar (Int)
+        fill        - Optional  : bar fill character (Str)
+        printEnd    - Optional  : end character (e.g. "\r", "\r\n") (Str)
+    """
+    total = len(iterable)
+    # Progress Bar Printing Function
+    def printProgressBar (iteration):
+        percent = ("{0:." + str(decimals) + "f}").format(100 * (iteration / float(total)))
+        filledLength = int(length * iteration // total)
+        bar = fill * filledLength + '-' * (length - filledLength)
+        print(f'\r{prefix} |{bar}| {percent}% {suffix}', end = printEnd)
+    # Initial Call
+    printProgressBar(0)
+    # Update Progress Bar
+    for i, item in enumerate(iterable):
+        yield item
+        printProgressBar(i + 1)
+    # Print New Line on Complete
+    print()
 
 
 
         
 def avtaler_fra_fil():
-    print("Du har valgt: 1: Skriv inn avtaler fra fil")
-    fortsette_tilbake = input("Hvis du vil fortsette, trykk ENTER, hvis du vil gå tilbake, tast 0")
-    if fortsette_tilbake == "0":
-        hovedmeny(1)
-    else:
-        pass
-        tkinter.Tk().withdraw() # prevents an empty tkinter window from appearing
-        filnavn = filedialog.askopenfilename()
-        global dict_liste
-        #dict_liste.clear() # slett den eksisterende listen
-        with open(filnavn, 'r') as csv_file:
-            reader = csv.reader(csv_file,delimiter=';')
-            dict_liste = dict(reader)
-        print ("Lest følgende avtaler fra fil: ")
-        for i in (dict_liste):
-            print(i," - ",dict_liste[i])
-        input("For å gå tilbake til hovedmenyen, trykk ENTER")
-        hovedmeny(1)
+    tkinter.Tk().withdraw() # prevents an empty tkinter window from appearing
+    filnavn = filedialog.askopenfilename()
+    global dict_liste
+    #dict_liste.clear() # slett den eksisterende listen
+    with open(filnavn, 'r') as csv_file:
+        reader = csv.reader(csv_file,delimiter=';')
+        dict_liste = dict(reader)
+    print ("Lest følgende avtaler fra fil: ")
+    for i in (dict_liste):
+        print(i," - ",dict_liste[i])
+    input("For å gå tilbake til hovedmenyen, trykk ENTER")
+    hovedmeny(1)
+
+
 def avtaler_til_fil():
     print("Du har valgt: 2: Skriv avtalene til fil")
     fortsette_tilbake = input("Hvis du vil fortsette, trykk ENTER, hvis du vil gå tilbake, tast 0")
@@ -243,54 +268,48 @@ def sted_til_fil():
 
 
 def ny_avtale_til_meny():       
-    print("Du har valgt: 3: Skriv inn en ny avtale")
-    fortsette_tilbake = input("For å fortsette, trykk ENTER, hvis du ønsker å gå tilbake til hovedmenyen, tast 0 :")
-    if fortsette_tilbake == "0":
-        hovedmeny(1)
-    else:
-        pass
-        bekreftet = "" 
-        while bekreftet != "Ja":
-            tittel = input("Ny avtale\nOppgi tittel:")
-            sted = input("Oppgi sted:")
-            print("Oppgi tidpunkt(ÅÅÅÅ-MM-DD TT:MM:SS):")
-            starttidspunkt = ""
+    bekreftet = "" 
+    while bekreftet != "Ja":
+        tittel = input("Ny avtale\nOppgi tittel:")
+        sted = input("Oppgi sted:")
+        print("Oppgi tidpunkt(ÅÅÅÅ-MM-DD TT:MM:SS):")
+        starttidspunkt = ""
 
-            while starttidspunkt == "":
-                try:
-                    starttidspunkt = datetime(int(input("ÅÅÅÅ:")),int(input("MM:")),int(input("DD:")),int(input("TT:")),int(input("MM:")))                
-                    if starttidspunkt < datetime.now():
-                        print("Dato utgått! Vennligst oppgi på nytt.")
-                        starttidspunkt = ""
-                except ValueError:
-                    print("Ikke en gyldig dato!")
+        while starttidspunkt == "":
+            try:
+                starttidspunkt = datetime(int(input("ÅÅÅÅ:")),int(input("MM:")),int(input("DD:")),int(input("TT:")),int(input("MM:")))                
+                if starttidspunkt < datetime.now():
+                    print("Dato utgått! Vennligst oppgi på nytt.")
+                    starttidspunkt = ""
+            except ValueError:
+                print("Ikke en gyldig dato!")
 
-            varighet = input("Oppgi varighet:")
-            while varighet != type(int):
-                try:
-                    varighet = int(varighet)
-                    break
-                except ValueError:
-                    print("Ikke et gyldig tall!")
-                    varighet = input("Oppgi varighet:")
-
-            kategori = input("Oppgi kategori:")
-
-
-            print("Bekreft ", Avtale(tittel,sted, starttidspunkt, varighet, kategori))
-            bekreftet = input("Ja/Nei:").casefold()        
-            if "ja" in bekreftet:
-
-                dict_liste[tittel]=Avtale(tittel,sted, starttidspunkt, varighet, kategori)
-                avtale_liste.append(Avtale(tittel,sted, starttidspunkt, varighet, kategori))
-
-                return(Avtale(tittel,sted, starttidspunkt, varighet, kategori))
+        varighet = input("Oppgi varighet:")
+        while varighet != type(int):
+            try:
+                varighet = int(varighet)
                 break
-            else:
-                print("Skriv avtalen på nytt.")
-                continue    
-                
-        input("For å gå tilbake til hovedmenyen, trykk ENTER")#han som har lagd den my flytte denne på riktig plass, finner ikke ut av det
+            except ValueError:
+                print("Ikke et gyldig tall!")
+                varighet = input("Oppgi varighet:")
+
+        kategori = input("Oppgi kategori:")
+
+
+        print("Bekreft ", Avtale(tittel,sted, starttidspunkt, varighet, kategori))
+        bekreftet = input("Ja/Nei:").casefold()        
+        if "ja" in bekreftet:
+
+            dict_liste[tittel]=Avtale(tittel,sted, starttidspunkt, varighet, kategori)
+            avtale_liste.append(Avtale(tittel,sted, starttidspunkt, varighet, kategori))
+
+            return(Avtale(tittel,sted, starttidspunkt, varighet, kategori))
+            break
+        else:
+            print("Skriv avtalen på nytt.")
+            continue    
+            
+    input("For å gå tilbake til hovedmenyen, trykk ENTER")#han som har lagd den my flytte denne på riktig plass, finner ikke ut av det
   
     
 #Funksjon for å lage en ny kategori 
@@ -425,7 +444,7 @@ def slette_avtale():
     hovedmeny(1)
 def filoperasjoner():
     print("\nHva ønsker du å endre?")
-    valg = str(input('\n1: Skriv avtale til fil\n2: Les avtale fra fil\n3: Kategori til fil\n4: Kategori fra fil\n5: Sted til fil\n6: Sted fra fil\n0: Avslutt\n\n> '))
+    valg = int(input('\n1: Skriv avtale til fil\n2: Les avtale fra fil\n3: Kategori til fil\n4: Kategori fra fil\n5: Sted til fil\n6: Sted fra fil\n0: Avslutt\n\n> '))
     if valg == 1:
         avtaler_til_fil()
     elif valg == 2:
@@ -490,11 +509,13 @@ def hovedmeny(start):
         print('6: Filoperasjoner')
         print('7: Legg til kategori')
         print('8: Legg til sted')
-
+        items_progress_bar = list(range(0, 57))#Liste til progress_bar
 
         try:
             valg=int(input("\nSkriv inn ønsket handling [1-8]:\n> "))
             if valg == 1:
+                for item in progress_bar(items_progress_bar, prefix = 'Progress:', suffix = 'Complete', length = 50):
+                    time.sleep(0.01)
                 ny_avtale_til_meny()
             elif valg == 2:
                 skriv_ut_alle()

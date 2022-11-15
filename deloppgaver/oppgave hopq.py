@@ -17,7 +17,7 @@ class GatenavnError(Exception):
     pass
 class EtternavnError(Exception):
     pass
-
+"""
 ## START TORBJØRN ( KUN FOR TESTING )
 
 class Sted():
@@ -74,8 +74,11 @@ indexfortest = (indexfortest-1)
 
 
 
+#Christoffer
+#Denne funksjonen gir et avtale-objekt ny kategori
+#Listene er laget lokalt, siden skriv_ut_alle funksjonen ikke tillater utskrift fra individ. lister.
 def ny_kategori_til_avtale():
-    
+    print('...\nLegge til ny kategori til avtale\n...\n')
     #Avtale liste kopi
     liste1 = avtale_liste
     df_liste_avtale = pd.DataFrame(columns = ['tittel','sted','starttidspunkt','varighet','kategori'])  
@@ -98,13 +101,9 @@ def ny_kategori_til_avtale():
     except ValueError:
         print('Skriv inn en gyldig indeksverdi')
     else:
-        gammel_tittel = df_liste_avtale.iloc[avtale_indeks]['tittel']
-        gammel_sted = df_liste_avtale.iloc[avtale_indeks]['sted']
-        gammel_starttidspunkt = df_liste_avtale.iloc[avtale_indeks]['starttidspunkt']
-        gammel_varighet = df_liste_avtale.iloc[avtale_indeks]['varighet']
         ny_kategori = kategori_liste[kategori_indeks]
-        avtale_liste[avtale_indeks] = Avtale(gammel_tittel, gammel_sted, gammel_starttidspunkt, gammel_varighet, ny_kategori)
-    
+        avtale_liste[avtale_indeks].kategori = Avtale(kategori=ny_kategori)
+  
 
 #p
 #   Lag et menyvalg for å finne alle avtaler som foregår på et bestemt sted. Skriv ut lista over 
@@ -113,6 +112,7 @@ def ny_kategori_til_avtale():
 
 
 #q
+
 #Klasse for kategori 
 class Kategori():
     def __init__(self, start_id = "", start_navn = "", start_prioritet = 1):
@@ -132,3 +132,44 @@ class Avtale():
 #Avtale streng __str__
     def __str__(self):
         return f"{self.tittel}, {self.sted}, {self.starttidspunkt}, {self.varighet} min, {self.kategori.id}, {self.kategori.navn}, {self.kategori.prioritet}"
+"""
+#Progressbar
+
+def progress_bar(iterable, prefix = '', suffix = '', decimals = 1, length = 100, fill = '█', printEnd = "\r"):
+    """
+    Call in a loop to create terminal progress bar
+    @params:
+        iterable    - Required  : iterable object (Iterable)
+        prefix      - Optional  : prefix string (Str)
+        suffix      - Optional  : suffix string (Str)
+        decimals    - Optional  : positive number of decimals in percent complete (Int)
+        length      - Optional  : character length of bar (Int)
+        fill        - Optional  : bar fill character (Str)
+        printEnd    - Optional  : end character (e.g. "\r", "\r\n") (Str)
+    """
+    total = len(iterable)
+    # Progress Bar Printing Function
+    def printProgressBar (iteration):
+        percent = ("{0:." + str(decimals) + "f}").format(100 * (iteration / float(total)))
+        filledLength = int(length * iteration // total)
+        bar = fill * filledLength + '-' * (length - filledLength)
+        print(f'\r{prefix} |{bar}| {percent}% {suffix}', end = printEnd)
+    # Initial Call
+    printProgressBar(0)
+    # Update Progress Bar
+    for i, item in enumerate(iterable):
+        yield item
+        printProgressBar(i + 1)
+    # Print New Line on Complete
+    print()
+
+import time
+
+# Liste til progress_bar
+items_progress_bar = list(range(0, 57))
+
+# Progress bar
+for item in progress_bar(items_progress_bar, prefix = 'Progress:', suffix = 'Complete', length = 50):
+    # Do stuff...
+    time.sleep(0.01)
+
