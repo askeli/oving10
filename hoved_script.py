@@ -430,13 +430,18 @@ def slette_avtale():
     
     
 def redigere_avtale():
-    print("Du har valgt: 6: Redigere en avtale")
-    fortsette_tilbake = input("For å fortsette, trykk ENTER, hvis du ønsker å gå tilbake til hovedmenyen, tast 0 :")
-    if fortsette_tilbake == "0":
+    print("Hva ønsker du å endre?: ")
+    valg = str(input('1: Endre avtale\n2: Legge kategori til avtale\n3: Legge sted til avtale\n0: Avslutt\n\n> '))
+    if valg == 0:
         hovedmeny(1)
-    else:
+    elif valg == 1:
         pass
+    elif valg == 2:
+        legg_til_kategori()
+    elif valg ==3:
+        print(nytt_sted())
     global liste
+
     for i in range(len(liste)):
         print(i,liste[i].tittel," - ",liste[i].__str__())
     indeks = int(input("Hvilken avtale vil du redigere?"))
@@ -454,44 +459,85 @@ def hovedmeny(start):
     os.system('cls')                 
     while start == 1:
         print('\nDAT 120 Øving 10 [14.11.2022]\n')
-        print("1: Les inn avtaler fra fil")
-        print("2: Skriv avtalene til fil")
-        print("3: Skriv inn en ny avtale")
-        print("4: Skriv ut alle avtalene")
-        print("5: Slette en avtale")
-        print("6: Redigere en avtale")
-        print("7: Søke i avtaler")
-        print("8: Legg til kategori")
-        print("9: Legg til sted")
-        print("10: Lagre kategorifil")
-        print("11: Åpne kategorifil")
-        print("12: Endre kategori til avtale")
-        print("0: Avslutt")
+        print('1: Skriv inn ny avtale')
+        print('2: Skriv ut alle avtaler')
+        print('3: Søke i avtaler')
+        print('4: Endre en avtale')
+            #4.1 Rediger avtale redigere_avtale()
+            #4.2 Legge til kategori legg_til_kategori()
+            #4.3 legge til sted print(nytt_sted())
+        print('5: Slette en avtale')
+        print('6: Importer avtaler fra fil')
+        print('7: Eksporter avtaler til fil')
+        print('8: Importer kategori fra fil')
+        print('9: Eksporter kategori til fil')
+        print('0: Avslutt')
         valg=int(input("\nSkriv inn ønsket handling [1-12]:\n> "))
-        if valg==1:
-            avtaler_fra_fil()
-        elif valg==2:
-            avtaler_til_fil()
-        elif valg ==3:
+        if valg == 1:
             ny_avtale_til_meny()
-        elif valg==4:
+        elif valg == 2:
             skriv_ut_alle()
-        elif valg==5:
-            slette_avtale()
-        elif valg==6:
-            redigere_avtale()
-        elif valg==7:
+        elif valg == 3:
             liste_filter(avtale_liste)
-        elif valg==8:
-            legg_til_kategori()
-        elif valg==9:
-            print(nytt_sted())
-        elif valg==10:
-            lagre_kategorifil()
-        elif valg==11:
+        elif valg == 4:
+            redigere_avtale()
+        elif valg == 5:
+            slette_avtale()
+        elif valg == 6:
+            avtaler_fra_fil()
+        elif valg == 7:
+            avtaler_til_fil()
+        elif valg == 8:
             åpne_kategori()
-        elif valg == 12:
-            ny_kategori_til_avtale()
+        elif valg == 9:
+            lagre_kategorifil()
         else:
             print("Ugyldig svar, vennligst bruk 1-6")
 hovedmeny(1)
+
+
+
+"""
+print("1: Les inn avtaler fra fil")#
+print("2: Skriv avtalene til fil")#
+print("3: Skriv inn en ny avtale")#
+print("4: Skriv ut alle avtalene")#
+print("5: Slette en avtale")#
+print("6: Redigere en avtale")#
+print("7: Søke i avtaler")#
+print("8: Legg til kategori")#
+print("9: Legg til sted")#
+print("10: Lagre kategorifil")#
+print("11: Åpne kategorifil")#
+print("12: Endre kategori til avtale")#
+print("0: Avslutt")
+
+if valg==1:
+    avtaler_fra_fil()
+elif valg==2:
+    avtaler_til_fil()
+elif valg ==3:
+    ny_avtale_til_meny()
+elif valg==4:
+    skriv_ut_alle()
+elif valg==5:
+    slette_avtale()
+elif valg==6:
+    redigere_avtale()
+elif valg==7:
+    liste_filter(avtale_liste)
+elif valg==8:
+    legg_til_kategori()
+elif valg==9:
+    print(nytt_sted())
+elif valg==10:
+    lagre_kategorifil()
+elif valg==11:
+    åpne_kategori()
+elif valg == 12:
+    ny_kategori_til_avtale()
+else:
+    print("Ugyldig svar, vennligst bruk 1-6")
+hovedmeny(1)
+"""
+
