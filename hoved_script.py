@@ -166,14 +166,18 @@ def ny_kategori_til_avtale():
     except ValueError:
         print('Skriv inn en gyldig indeksverdi')
     else:
+        items_progress_bar = list(range(0, 57))#Liste til progress_bar
         try:
-            valg = int(input('Ønsker du å\n1: Legge til\n2: Overskrive\n> '))
+            valg = int(input('Ønsker du å\n1: Skrive over\n2: Legge til\n> '))
         except ValueError:
             print('Skriv inn en gyldig verdi')
         if valg == 1:
-            ny_kategori = kategori_liste[kategori_indeks]
-            avtale_liste[avtale_indeks].kategori = Avtale(kategori=ny_kategori)
+            for item in progress_bar(items_progress_bar, prefix = 'Laster:', suffix = 'Ferdig', length = 50):
+                    time.sleep(0.02)
+            avtale_liste[avtale_indeks].kategori = [kategori_liste[kategori_indeks]]
         elif valg == 2:
+            for item in progress_bar(items_progress_bar, prefix = 'Laster:', suffix = 'Ferdig', length = 50):
+                    time.sleep(0.02)
             Avtale.legg_til_kategori(avtale_liste[avtale_indeks],kategori_liste[kategori_indeks]) 
         elif valg > 0 and valg < 0:
             raise ValueError
@@ -402,12 +406,15 @@ def skriv_ut_alle():
     print("3: Sted")
     valg = int(input("\n> "))
     #kategori liste
+    items_progress_bar = list(range(0, 57))#Liste til progress_bar
     if valg == 1:
         liste = kategori_liste
         df_liste = pd.DataFrame(columns = ['ID','navn','prioritet'])  
         for i in liste:
             df = pd.DataFrame([[i.id,i.navn,i.prioritet]], columns=(['ID','navn','prioritet']))
-            df_liste = df_liste.append([df], ignore_index=True) 
+            df_liste = df_liste.append([df], ignore_index=True)
+        for item in progress_bar(items_progress_bar, prefix = 'Laster:', suffix = 'Ferdig', length = 50):
+                time.sleep(0.01)
         print("Utskrift kategori")
         print(df_liste) 
 
@@ -418,6 +425,8 @@ def skriv_ut_alle():
         for i in liste:
             df = pd.DataFrame([[i.tittel,i.sted,str(i.starttidspunkt),i.varighet,i.kategori]], columns=('tittel','sted','starttidspunkt','varighet','kategori'))
             df_liste = df_liste.append([df], ignore_index=True)
+        for item in progress_bar(items_progress_bar, prefix = 'Laster:', suffix = 'Ferdig', length = 50):
+                    time.sleep(0.01)
         print("Utskrift Avtaler")
         print(df_liste)
 
@@ -428,6 +437,8 @@ def skriv_ut_alle():
         for i in liste:
             df = pd.DataFrame([[i.id, i.navn, i.gateadresse,i.poststed,i.postnummer]], columns=('id','navn','gateadresse','poststed','postnummer'))
             df_liste = df_liste.append([df], ignore_index=True)
+        for item in progress_bar(items_progress_bar, prefix = 'Laster:', suffix = 'Ferdig', length = 50):
+                    time.sleep(0.01)
         print("Utskrift sted")
         print(df_liste)
     else:
@@ -520,15 +531,13 @@ def hovedmeny(start):
         print('6: Filoperasjoner')
         print('7: Legg til kategori')
         print('8: Legg til sted')
-        items_progress_bar = list(range(0, 57))#Liste til progress_bar
+        #items_progress_bar = list(range(0, 57))#Liste til progress_bar
 
         try:
             valg=int(input("\nSkriv inn ønsket handling [1-8]:\n> "))
             if valg == 1:
                 ny_avtale_til_meny()
             elif valg == 2:
-                for item in progress_bar(items_progress_bar, prefix = 'Laster:', suffix = 'Ferdig', length = 50):
-                    time.sleep(0.01)
                 skriv_ut_alle()
             elif valg == 3:
                 liste_filter(avtale_liste)
