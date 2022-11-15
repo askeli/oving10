@@ -374,10 +374,10 @@ def skriv_ut_alle():
         global avtale_liste
         global sted_liste
 
-        print("print ut liste:")
-        print("1: kategori")
-        print("2: avtale")
-        print("3: sted")
+        print("Skriv ut liste:")
+        print("1: Kategori")
+        print("2: Avtale")
+        print("3: Sted")
         valg = int(input("valg = "))
         #kategori liste
         if valg == 1:
@@ -430,16 +430,16 @@ def slette_avtale():
     
     
 def redigere_avtale():
-    print("Hva ønsker du å endre?: ")
-    valg = str(input('1: Endre avtale\n2: Legge kategori til avtale\n3: Legge sted til avtale\n0: Avslutt\n\n> '))
-    if valg == 0:
-        hovedmeny(1)
-    elif valg == 1:
+    print("\nHva ønsker du å endre?")
+    valg = str(input('\n1: Endre avtale\n2: Legge kategori til avtale\n3: Legge sted til avtale\n0: Avslutt\n\n> '))
+    if valg == 1:
         pass
     elif valg == 2:
         legg_til_kategori()
     elif valg ==3:
         print(nytt_sted())
+    else:
+        hovedmeny(1)
     global liste
 
     for i in range(len(liste)):
@@ -472,7 +472,7 @@ def hovedmeny(start):
         print('8: Importer kategori fra fil')
         print('9: Eksporter kategori til fil')
         print('0: Avslutt')
-        valg=int(input("\nSkriv inn ønsket handling [1-12]:\n> "))
+        valg=int(input("\nSkriv inn ønsket handling [1-9]:\n> "))
         if valg == 1:
             ny_avtale_til_meny()
         elif valg == 2:
