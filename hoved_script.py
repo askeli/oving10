@@ -427,7 +427,19 @@ def slette_avtale():
     input("Avtale slettet, trykk ENTER for å gå tilbake til hovedmenyen")
 
     hovedmeny(1)
-    
+def filoperasjoner():
+    print("\nHva ønsker du å endre?")
+    valg = str(input('\n1: Skriv avtale til fil\n2: Les avtale fra fil\n3: Sted fra fil\n4 Sted til fil\n0: Avslutt\n\n> '))
+    if valg == 1:
+        skriv_til_fil()
+    elif valg == 2:
+        sted_til_fil()
+    elif valg ==3:
+        sted_fra_fil()
+    elif valg == 4:
+        sted_til_fil()
+    else:
+        hovedmeny(1)
     
 def redigere_avtale():
     print("\nHva ønsker du å endre?")
@@ -467,7 +479,7 @@ def hovedmeny(start):
             #4.2 Legge til kategori legg_til_kategori()
             #4.3 legge til sted print(nytt_sted())
         print('5: Slette en avtale')
-        print('6: Importer avtaler fra fil')
+        print('6: Filoperasjoner')
         print('7: Eksporter avtaler til fil')
         print('8: Importer kategori fra fil')
         print('9: Eksporter kategori til fil')
@@ -484,7 +496,7 @@ def hovedmeny(start):
         elif valg == 5:
             slette_avtale()
         elif valg == 6:
-            avtaler_fra_fil()
+            filoperasjoner()
         elif valg == 7:
             avtaler_til_fil()
         elif valg == 8:
