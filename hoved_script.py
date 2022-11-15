@@ -484,8 +484,12 @@ def hovedmeny(start):
             #4.3 legge til sted print(nytt_sted())
         print('5: Slette en avtale')
         print('6: Filoperasjoner')
+        print('7: Ny kategori')
+        print('8: Nytt sted')
+
+
         try:
-            valg=int(input("\nSkriv inn ønsket handling [1-6]:\n> "))
+            valg=int(input("\nSkriv inn ønsket handling [1-8]:\n> "))
             if valg == 1:
                 ny_avtale_til_meny()
             elif valg == 2:
@@ -498,10 +502,14 @@ def hovedmeny(start):
                 slette_avtale()
             elif valg == 6:
                 filoperasjoner()
+            elif valg == 7:
+                ny_kategori()
+            elif valg == 8:
+                nytt_sted()
             else:
-                print("Ugyldig svar, vennligst bruk 1-6")
+                print("Ugyldig svar, vennligst bruk 1-8")
                 input("")
         except ValueError:
-            print("Ugyldig svar, vennligst bruk 1-6")
+            print("Ugyldig svar, vennligst bruk 1-8")
             input("")            
 hovedmeny(1)
