@@ -293,34 +293,28 @@ def ny_avtale_til_meny():
     
 #Funksjon for å lage en ny kategori 
 def legg_til_kategori():
-    print("Du har valgt: 8: Legg til kategori")
-    fortsette_tilbake = input("For å fortsette, tast 1, hvis du ønsker å gå tilbake til hovedmenyen, tast 0 :")
-    if fortsette_tilbake == "0":
-        hovedmeny()
-    else:
-        pass
-        bruker_id = input("skriv inn id: ") 
-        navn = input("skriv inn navn: ")
-        prioritet = ""
-        while prioritet == "":
-            prioritet = input("skriv inn prioritet(1-2-3): ")
-            try:
-                prioritet = int(prioritet)
-                if prioritet < 1 or prioritet > 3:
-                    prioritet = ""
-                    raise ValueError                
-            except ValueError:
+    bruker_id = input("skriv inn id: ") 
+    navn = input("skriv inn navn: ")
+    prioritet = ""
+    while prioritet == "":
+        prioritet = input("skriv inn prioritet(1-2-3): ")
+        try:
+            prioritet = int(prioritet)
+            if prioritet < 1 or prioritet > 3:
                 prioritet = ""
-                print("ikke et gyldig tall")
+                raise ValueError                
+        except ValueError:
+            prioritet = ""
+            print("ikke et gyldig tall")
 
-        print("Bekreft kategori: ", Kategori(bruker_id, navn, prioritet))
-        bekreftet = input("Ja/Nei:").casefold()  
-        if "ja" in bekreftet:
-            print("kategori lagret")
-            kategori_liste.append(Kategori(bruker_id, navn, prioritet))            
-            return (Kategori(bruker_id, navn, prioritet))
-        else:
-            print("kategori ikke lagret")
+    print("Bekreft kategori: ", Kategori(bruker_id, navn, prioritet))
+    bekreftet = input("Ja/Nei:").casefold()  
+    if "ja" in bekreftet:
+        print("kategori lagret")
+        kategori_liste.append(Kategori(bruker_id, navn, prioritet))            
+        return (Kategori(bruker_id, navn, prioritet))
+    else:
+        print("kategori ikke lagret")
         
 
 #Funksjon for å lagre kategori liste til fil
