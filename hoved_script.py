@@ -30,7 +30,7 @@ kategori_liste=[]
 
 #Klasse for ny avtale 
 class Avtale():
-    def __init__(self, init_tittel = "", init_sted = "", init_starttidspunkt = datetime.now(), init_varighet = 0, init_kategori ="" ):
+    def __init__(self, init_tittel = "", init_sted = "", init_starttidspunkt = datetime.now(), init_varighet = 0, init_kategori =[] ):
         self.tittel = init_tittel
         self.sted = init_sted
         self.starttidspunkt = init_starttidspunkt
@@ -41,6 +41,12 @@ class Avtale():
     def __str__(self):
         return f"{self.tittel}, {self.sted}, {self.starttidspunkt}, {self.varighet} min, {self.kategori}"
 
+#metode legg til kategori til avtale    
+    def legg_til_kategori(self, valgt_kategori):
+        self.kategori.append(valgt_kategori)
+    
+    
+    
 #Klasse for kategori 
 class Kategori():
     def __init__(self, start_id = "", start_navn = "", start_prioritet = 1):
@@ -168,7 +174,7 @@ def ny_kategori_til_avtale():
             ny_kategori = kategori_liste[kategori_indeks]
             avtale_liste[avtale_indeks].kategori = Avtale(kategori=ny_kategori)
         elif valg == 2:
-            #Gjør någe aent
+            Avtale.legg_til_kategori(avtale_liste[avtale_indeks],kategori_liste[kategori_indeks]) 
         elif valg > 0 and valg < 0:
             raise ValueError
 
@@ -307,9 +313,9 @@ def ny_avtale_til_meny():
         if "ja" in bekreftet:
 
             dict_liste[tittel]=Avtale(tittel,sted, starttidspunkt, varighet, kategori)
-            avtale_liste.append(Avtale(tittel,sted, starttidspunkt, varighet, kategori))
+            avtale_liste.append(Avtale(tittel,sted, starttidspunkt, varighet, [kategori]))
 
-            return(Avtale(tittel,sted, starttidspunkt, varighet, kategori))
+            return(Avtale(tittel,sted, starttidspunkt, varighet, [kategori]))
             break
         else:
             print("Skriv avtalen på nytt.")
