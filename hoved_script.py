@@ -107,6 +107,7 @@ def liste_filter(avtale_liste):
 postnummer_register_df = pd.read_excel('ressursfiler\Postnummerregister-Excel.xlsx', sheet_name=0)
 
 def nytt_sted():
+    global sted_liste
     print('\033[1m','\nLegge til nytt sted\n','\033[0m')
     while True:
         try:
@@ -127,6 +128,7 @@ def nytt_sted():
             print('Vennligst skriv inn et gyldig postnummer. ')
         else:
             break
+    sted_liste.append(Sted(kommunenummer, stedsnavn, gatenavn, poststed, postnummer))
     return Sted(kommunenummer, stedsnavn, gatenavn, poststed, postnummer)
 
 
