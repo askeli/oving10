@@ -160,8 +160,17 @@ def ny_kategori_til_avtale():
     except ValueError:
         print('Skriv inn en gyldig indeksverdi')
     else:
-        ny_kategori = kategori_liste[kategori_indeks]
-        avtale_liste[avtale_indeks].kategori = Avtale(kategori=ny_kategori)
+        try:
+            valg = int(input('Ønsker du å\n1: Legge til\n2: Overskrive\n> '))
+        except ValueError:
+            print('Skriv inn en gyldig verdi')
+        if valg == 1:
+            ny_kategori = kategori_liste[kategori_indeks]
+            avtale_liste[avtale_indeks].kategori = Avtale(kategori=ny_kategori)
+        elif valg == 2:
+            #Gjør någe aent
+        elif valg > 0 and valg < 0:
+            raise ValueError
 
 #Progressbar
 def progress_bar(iterable, prefix = '', suffix = '', decimals = 1, length = 100, fill = '█', printEnd = "\r"):
