@@ -441,7 +441,7 @@ def filoperasjoner():
     elif valg == 5:
         sted_til_fil()
     elif valg ==6:
-        sted_fra_fil()
+        fil_til_sted()
     else:
         hovedmeny(1)
     
