@@ -451,7 +451,7 @@ def redigere_avtale():
     if valg == 1:
         pass
     elif valg == 2:
-        legg_til_kategori()
+        ny_kategori_til_avtale()
     elif valg ==3:
         print(nytt_sted())
     else:
@@ -480,12 +480,12 @@ def hovedmeny(start):
         print('3: Søke i avtaler')
         print('4: Endre en avtale')
             #4.1 Rediger avtale redigere_avtale()
-            #4.2 Legge til kategori legg_til_kategori()
-            #4.3 legge til sted print(nytt_sted())
+            #4.2 Legge kategori til avtale ny_kategori_til_avtale()
+            #4.3 Legge sted til avtale (NY FUNKSJON, EKSISTERER IKKE)
         print('5: Slette en avtale')
         print('6: Filoperasjoner')
-        print('7: Ny kategori')
-        print('8: Nytt sted')
+        print('7: Legg til kategori')
+        print('8: Legg til sted')
 
 
         try:
@@ -503,9 +503,9 @@ def hovedmeny(start):
             elif valg == 6:
                 filoperasjoner()
             elif valg == 7:
-                ny_kategori()
+                legg_til_kategori()
             elif valg == 8:
-                nytt_sted()
+                print(nytt_sted())
             else:
                 print("Ugyldig svar, vennligst bruk 1-8")
                 input("")

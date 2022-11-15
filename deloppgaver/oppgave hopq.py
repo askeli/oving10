@@ -110,3 +110,25 @@ def ny_kategori_til_avtale():
 #   Lag et menyvalg for å finne alle avtaler som foregår på et bestemt sted. Skriv ut lista over 
 #   steder. Gå gjennom alle avtalene og sjekk stedet den foregår på. Skriv ut avtalen hvis den 
 #   foregår på det angitte stedet.
+
+
+#q
+#Klasse for kategori 
+class Kategori():
+    def __init__(self, start_id = "", start_navn = "", start_prioritet = 1):
+        self.id = start_id
+        self.navn = start_navn
+        self.prioritet = start_prioritet
+
+#Klasse for ny avtale 
+class Avtale():
+    def __init__(self, init_tittel = "", init_sted = "", init_starttidspunkt = datetime.now(), init_varighet = 0, init_kategori ="" ):
+        self.tittel = init_tittel
+        self.sted = init_sted
+        self.starttidspunkt = init_starttidspunkt
+        self.varighet = init_varighet
+        self.kategori = init_kategori
+
+#Avtale streng __str__
+    def __str__(self):
+        return f"{self.tittel}, {self.sted}, {self.starttidspunkt}, {self.varighet} min, {self.kategori.id}, {self.kategori.navn}, {self.kategori.prioritet}"
