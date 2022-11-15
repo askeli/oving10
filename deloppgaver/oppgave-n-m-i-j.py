@@ -17,7 +17,7 @@ import tkinter
 from tkinter import filedialog
 import os
 import webbrowser
-
+import time
 
 dict_liste = dict()  
 liste=[]
@@ -25,6 +25,7 @@ liste=[]
 avtale_liste=[]
 sted_liste=[]
 kategori_liste=[]
+
 
 
 #Klasse for ny avtale 
@@ -75,7 +76,7 @@ class Sted():
 #Unntakshåndtering
 class GatenavnError(Exception):
     pass
-class EtternavnError(Exception):
+class StedsnavnError(Exception):
     pass     
 
 
@@ -103,31 +104,33 @@ def liste_filter(avtale_liste):
             return print("Søkeresultat som inneholder '%s': \n"%(lete_streng),data_frame[data_frame['%s'%(gyldige_kolonner[kolonne-1])].str.contains(lete_streng)])
 
 #Christoffer
-#Denne funksjonen tar inn *etternavn, *gatenavn og *postnummer. Poststed og kommunenummer (id) er hentet fra et xlsx ark lastet ned fra bring.no
+#Denne funksjonen tar inn *stedsnavn, *gatenavn og *postnummer. Poststed og kommunenummer (id) er hentet fra et xlsx ark lastet ned fra bring.no
 postnummer_register_df = pd.read_excel('ressursfiler\Postnummerregister-Excel.xlsx', sheet_name=0)
 
 def nytt_sted():
+    global sted_liste
     print('\033[1m','\nLegge til nytt sted\n','\033[0m')
     while True:
         try:
-            etternavn = input('Skriv inn etternavn:\n> ')
+            stedsnavn = input('Skriv inn stedsnavn:\n> ')
             gatenavn = input('Skriv inn gatenavn:\n> ')
             postnummer = int(input('Skriv inn postnummer:\n> '))
             poststed = postnummer_register_df[(postnummer_register_df['Postnummer'] == postnummer)]['Poststed'].item()
             kommunenummer = postnummer_register_df[(postnummer_register_df['Postnummer'] == postnummer)]['Kommunenummer'].item()
-            if etternavn.isalpha() is not True:
-                raise EtternavnError
+            if stedsnavn.isalpha() is not True:
+                raise StedsnavnError
             elif gatenavn.isalpha() is not True:
                 raise GatenavnError
-        except EtternavnError:
-            print('Vennligst skriv inn et gyldig etternavn. ')
+        except StedsnavnError:
+            print('Vennligst skriv inn et gyldig stedsnavn. ')
         except GatenavnError:
             print('Vennligst skriv inn et gyldig gatenavn. ')
         except ValueError:
             print('Vennligst skriv inn et gyldig postnummer. ')
         else:
             break
-    return Sted(kommunenummer, etternavn, gatenavn, poststed, postnummer)
+    sted_liste.append(Sted(kommunenummer, stedsnavn, gatenavn, poststed, postnummer))
+    return Sted(kommunenummer, stedsnavn, gatenavn, poststed, postnummer)
 
 
 #Christoffer
@@ -160,29 +163,53 @@ def ny_kategori_til_avtale():
         ny_kategori = kategori_liste[kategori_indeks]
         avtale_liste[avtale_indeks].kategori = Avtale(kategori=ny_kategori)
 
+#Progressbar
+def progress_bar(iterable, prefix = '', suffix = '', decimals = 1, length = 100, fill = '█', printEnd = "\r"):
+    """
+    Call in a loop to create terminal progress bar
+    @params:
+        iterable    - Required  : iterable object (Iterable)
+        prefix      - Optional  : prefix string (Str)
+        suffix      - Optional  : suffix string (Str)
+        decimals    - Optional  : positive number of decimals in percent complete (Int)
+        length      - Optional  : character length of bar (Int)
+        fill        - Optional  : bar fill character (Str)
+        printEnd    - Optional  : end character (e.g. "\r", "\r\n") (Str)
+    """
+    total = len(iterable)
+    # Progress Bar Printing Function
+    def printProgressBar (iteration):
+        percent = ("{0:." + str(decimals) + "f}").format(100 * (iteration / float(total)))
+        filledLength = int(length * iteration // total)
+        bar = fill * filledLength + '-' * (length - filledLength)
+        print(f'\r{prefix} |{bar}| {percent}% {suffix}', end = printEnd)
+    # Initial Call
+    printProgressBar(0)
+    # Update Progress Bar
+    for i, item in enumerate(iterable):
+        yield item
+        printProgressBar(i + 1)
+    # Print New Line on Complete
+    print()
 
 
 
         
 def avtaler_fra_fil():
-    print("Du har valgt: 1: Skriv inn avtaler fra fil")
-    fortsette_tilbake = input("Hvis du vil fortsette, trykk ENTER, hvis du vil gå tilbake, tast 0")
-    if fortsette_tilbake == "0":
-        hovedmeny(1)
-    else:
-        pass
-        tkinter.Tk().withdraw() # prevents an empty tkinter window from appearing
-        filnavn = filedialog.askopenfilename()
-        global dict_liste
-        #dict_liste.clear() # slett den eksisterende listen
-        with open(filnavn, 'r') as csv_file:
-            reader = csv.reader(csv_file,delimiter=';')
-            dict_liste = dict(reader)
-        print ("Lest følgende avtaler fra fil: ")
-        for i in (dict_liste):
-            print(i," - ",dict_liste[i])
-        input("For å gå tilbake til hovedmenyen, trykk ENTER")
-        hovedmeny(1)
+    tkinter.Tk().withdraw() # prevents an empty tkinter window from appearing
+    filnavn = filedialog.askopenfilename()
+    global dict_liste
+    #dict_liste.clear() # slett den eksisterende listen
+    with open(filnavn, 'r') as csv_file:
+        reader = csv.reader(csv_file,delimiter=';')
+        dict_liste = dict(reader)
+    print ("Lest følgende avtaler fra fil: ")
+    for i in (dict_liste):
+        print(i," - ",dict_liste[i])
+    input("For å gå tilbake til hovedmenyen, trykk ENTER")
+    hovedmeny(1)
+
+
 def avtaler_til_fil():
     print("Du har valgt: 2: Skriv avtalene til fil")
     fortsette_tilbake = input("Hvis du vil fortsette, trykk ENTER, hvis du vil gå tilbake, tast 0")
@@ -202,125 +229,107 @@ def avtaler_til_fil():
     
 ## fil_til_Sted funksjon
 def fil_til_sted():
-    print("Du har valgt: xx: Skriv inn steder fra fil")
-    fortsette_tilbake = input("Hvis du vil fortsette, trykk ENTER, hvis du vil gå tilbake, tast 0")
-    if fortsette_tilbake == "0":
-        hovedmeny(1)
-    else:
-        pass
-        tkinter.Tk().withdraw()
-        filnavn = filedialog.askopenfilename()
-        global sted_liste  
-        sted_liste.clear()
-        with open(filnavn, 'r') as csv_file:
-            reader = csv.reader(csv_file,delimiter=';')
-            for row in reader:
-                sted_liste.append(Sted(row[0],row[1],row[2],row[3],row[4]))
-        print ("Lest følgende steder fra fil: ")
-        for i in (sted_liste):
-            print(i)
-        input("For å gå tilbake til hovedmenyen, trykk ENTER")
-        hovedmeny(1)
-def sted_til_fil():
     print("Du har valgt: xx: Skriv steder til fil")
     fortsette_tilbake = input("Hvis du vil fortsette, trykk ENTER, hvis du vil gå tilbake, tast 0")
     if fortsette_tilbake == "0":
         hovedmeny(1)
     else:
         pass
-        with open('steder.csv', 'a',newline='') as csv_file:
-            writer = csv.writer(csv_file,delimiter =";")
-            for i in sted_liste:
-                writer.writerow([i.navn,i.adresse,i.postnr,i.poststed,i.telefonnr])
-            print ("Skrevet følgende steder til fil: ")
-            for i in (sted_liste):
-                print(i)
+        a_file = open("steder.csv", "r")
+        lines = a_file.readlines()
+        for line in lines:
+            print(line)
+    input("For å gå tilbake til hovedmenyen, trykk ENTER")
+    hovedmeny(1)
+
+
+def sted_til_fil():
+    global sted_liste
+    print("Du har valgt: xx: Skriv steder til fil")
+    fortsette_tilbake = input("Hvis du vil fortsette, trykk ENTER, hvis du vil gå tilbake, tast 0")
+    if fortsette_tilbake == "0":
+        hovedmeny(1)
+    else:
+        pass
+        with open('steder.csv', 'a',newline='') as csv_file: # appender csv filen, endre til w hvis den skal overskrives
+            writer = csv.writer(csv_file, delimiter='\n')
+            writer.writerow(sted_liste)
     input("For å gå tilbake til hovedmenyen, trykk ENTER")
     hovedmeny(1)
 
 
 
 def ny_avtale_til_meny():       
-    print("Du har valgt: 3: Skriv inn en ny avtale")
-    fortsette_tilbake = input("For å fortsette, trykk ENTER, hvis du ønsker å gå tilbake til hovedmenyen, tast 0 :")
-    if fortsette_tilbake == "0":
-        hovedmeny(1)
-    else:
-        pass
-        bekreftet = "" 
-        while bekreftet != "Ja":
-            tittel = input("Ny avtale\nOppgi tittel:")
-            sted = input("Oppgi sted:")
-            print("Oppgi tidpunkt(ÅÅÅÅ-MM-DD TT:MM:SS):")
-            starttidspunkt = ""
+    bekreftet = "" 
+    while bekreftet != "Ja":
+        tittel = input("Ny avtale\nOppgi tittel:")
+        for (i, item) in enumerate(sted_liste, start=0):
+            print(i, item)
+        sted = sted_liste[int(input("Oppgi sted:"))]
+        print("Oppgi tidpunkt(ÅÅÅÅ-MM-DD TT:MM:SS):")
+        starttidspunkt = ""
 
-            while starttidspunkt == "":
-                try:
-                    starttidspunkt = datetime(int(input("ÅÅÅÅ:")),int(input("MM:")),int(input("DD:")),int(input("TT:")),int(input("MM:")))                
-                    if starttidspunkt < datetime.now():
-                        print("Dato utgått! Vennligst oppgi på nytt.")
-                        starttidspunkt = ""
-                except ValueError:
-                    print("Ikke en gyldig dato!")
+        while starttidspunkt == "":
+            try:
+                starttidspunkt = datetime(int(input("ÅÅÅÅ:")),int(input("MM:")),int(input("DD:")),int(input("TT:")),int(input("MM:")))                
+                if starttidspunkt < datetime.now():
+                    print("Dato utgått! Vennligst oppgi på nytt.")
+                    starttidspunkt = ""
+            except ValueError:
+                print("Ikke en gyldig dato!")
 
-            varighet = input("Oppgi varighet:")
-            while varighet != type(int):
-                try:
-                    varighet = int(varighet)
-                    break
-                except ValueError:
-                    print("Ikke et gyldig tall!")
-                    varighet = input("Oppgi varighet:")
-
-            kategori = input("Oppgi kategori:")
-
-
-            print("Bekreft ", Avtale(tittel,sted, starttidspunkt, varighet, kategori))
-            bekreftet = input("Ja/Nei:").casefold()        
-            if "ja" in bekreftet:
-
-                dict_liste[tittel]=Avtale(tittel,sted, starttidspunkt, varighet, kategori)
-                avtale_liste.append(Avtale(tittel,sted, starttidspunkt, varighet, kategori))
-
-                return(Avtale(tittel,sted, starttidspunkt, varighet, kategori))
+        varighet = input("Oppgi varighet:")
+        while varighet != type(int):
+            try:
+                varighet = int(varighet)
                 break
-            else:
-                print("Skriv avtalen på nytt.")
-                continue    
-                
-        input("For å gå tilbake til hovedmenyen, trykk ENTER")#han som har lagd den my flytte denne på riktig plass, finner ikke ut av det
+            except ValueError:
+                print("Ikke et gyldig tall!")
+                varighet = input("Oppgi varighet:")
+
+        kategori = input("Oppgi kategori:")
+
+
+        print("Bekreft ", Avtale(tittel,sted, starttidspunkt, varighet, kategori))
+        bekreftet = input("Ja/Nei:").casefold()        
+        if "ja" in bekreftet:
+
+            dict_liste[tittel]=Avtale(tittel,sted, starttidspunkt, varighet, kategori)
+            avtale_liste.append(Avtale(tittel,sted, starttidspunkt, varighet, kategori))
+
+            return(Avtale(tittel,sted, starttidspunkt, varighet, kategori))
+            break
+        else:
+            print("Skriv avtalen på nytt.")
+            continue    
+            
+    input("For å gå tilbake til hovedmenyen, trykk ENTER")#han som har lagd den my flytte denne på riktig plass, finner ikke ut av det
   
     
 #Funksjon for å lage en ny kategori 
 def legg_til_kategori():
-    print("Du har valgt: 8: Legg til kategori")
-    fortsette_tilbake = input("For å fortsette, tast 1, hvis du ønsker å gå tilbake til hovedmenyen, tast 0 :")
-    if fortsette_tilbake == "0":
-        hovedmeny()
-    else:
-        pass
-        bruker_id = input("skriv inn id: ") 
-        navn = input("skriv inn navn: ")
-        prioritet = ""
-        while prioritet == "":
-            prioritet = input("skriv inn prioritet(1-2-3): ")
-            try:
-                prioritet = int(prioritet)
-                if prioritet < 1 or prioritet > 3:
-                    prioritet = ""
-                    raise ValueError                
-            except ValueError:
+    bruker_id = input("Skriv inn id: ") 
+    navn = input("Skriv inn navn: ")
+    prioritet = ""
+    while prioritet == "":
+        prioritet = input("Skriv inn prioritet(1-2-3): ")
+        try:
+            prioritet = int(prioritet)
+            if prioritet < 1 or prioritet > 3:
                 prioritet = ""
-                print("ikke et gyldig tall")
+                raise ValueError                
+        except ValueError:
+            prioritet = ""
+            print("Ikke et gyldig tall")
 
-        print("Bekreft kategori: ", Kategori(bruker_id, navn, prioritet))
-        bekreftet = input("Ja/Nei:").casefold()  
-        if "ja" in bekreftet:
-            print("kategori lagret")
-            kategori_liste.append(Kategori(bruker_id, navn, prioritet))            
-            return (Kategori(bruker_id, navn, prioritet))
-        else:
-            print("kategori ikke lagret")
+    print("Bekreft kategori: ", Kategori(bruker_id, navn, prioritet))
+    bekreftet = input("Ja/Nei:").casefold()  
+    if "ja" in bekreftet:
+        print("Kategori lagret")
+        kategori_liste.append(Kategori(bruker_id, navn, prioritet))            
+        return (Kategori(bruker_id, navn, prioritet))
+    else:
+        print("Kategori ikke lagret")
         
 
 #Funksjon for å lagre kategori liste til fil
@@ -364,52 +373,47 @@ def åpne_kategori():
 
 #Funksjon for å skrive ut lister
 def skriv_ut_alle():
-    print("Du har valgt: 4: Skriv ut alle avtalene")
-    fortsette_tilbake = input("For å fortsette, tast 1, hvis du ønsker å gå tilbake til hovedmenyen, tast 0 :")
-    if fortsette_tilbake == "0":
-        hovedmeny()
+    pass
+    global kategori_liste
+    global avtale_liste
+    global sted_liste
+
+    print("Skriv ut liste:")
+    print("1: Kategori")
+    print("2: Avtale")
+    print("3: Sted")
+    valg = int(input("\n> "))
+    #kategori liste
+    if valg == 1:
+        liste = kategori_liste
+        df_liste = pd.DataFrame(columns = ['ID','navn','prioritet'])  
+        for i in liste:
+            df = pd.DataFrame([[i.id,i.navn,i.prioritet]], columns=(['ID','navn','prioritet']))
+            df_liste = df_liste.append([df], ignore_index=True) 
+        print("Utskrift kategori")
+        print(df_liste) 
+
+    #avtale liste
+    elif valg == 2: 
+        liste = avtale_liste
+        df_liste = pd.DataFrame(columns = ['tittel','sted','starttidspunkt','varighet','kategori'])  
+        for i in liste:
+            df = pd.DataFrame([[i.tittel,i.sted,str(i.starttidspunkt),i.varighet,i.kategori]], columns=('tittel','sted','starttidspunkt','varighet','kategori'))
+            df_liste = df_liste.append([df], ignore_index=True)
+        print("Utskrift Avtaler")
+        print(df_liste)
+
+    #sted liste    
+    elif valg == 3:
+        liste = sted_liste
+        df_liste = pd.DataFrame(columns = ['id','navn','gateadresse','poststed','postnummer'])  
+        for i in liste:
+            df = pd.DataFrame([[i.id, i.navn, i.gateadresse,i.poststed,i.postnummer]], columns=('id','navn','gateadresse','poststed','postnummer'))
+            df_liste = df_liste.append([df], ignore_index=True)
+        print("Utskrift sted")
+        print(df_liste)
     else:
-        pass
-        global kategori_liste
-        global avtale_liste
-        global sted_liste
-
-        print("print ut liste:")
-        print("1: kategori")
-        print("2: avtale")
-        print("3: sted")
-        valg = int(input("valg = "))
-        #kategori liste
-        if valg == 1:
-            liste = kategori_liste
-            df_liste = pd.DataFrame(columns = ['ID','navn','prioritet'])  
-            for i in liste:
-                df = pd.DataFrame([[i.id,i.navn,i.prioritet]], columns=(['ID','navn','prioritet']))
-                df_liste = df_liste.append([df], ignore_index=True) 
-            print("Utskrift kategori")
-            print(df_liste) 
-
-        #avtale liste
-        elif valg == 2: 
-            liste = avtale_liste
-            df_liste = pd.DataFrame(columns = ['tittel','sted','starttidspunkt','varighet','kategori'])  
-            for i in liste:
-                df = pd.DataFrame([[i.tittel,i.sted,str(i.starttidspunkt),i.varighet,i.kategori]], columns=('tittel','sted','starttidspunkt','varighet','kategori'))
-                df_liste = df_liste.append([df], ignore_index=True)
-            print("Utskrift Avtaler")
-            print(df_liste)
-
-        #sted liste    
-        elif valg == 3:
-            liste = sted_liste
-            df_liste = pd.DataFrame(columns = ['id','navn','gateadresse','poststed','postnummer'])  
-            for i in liste:
-                df = pd.DataFrame([[i.id, i.navn, i.gateadresse,i.poststed,i.postnummer]], columns=('id','navn','gateadresse','poststed','postnummer'))
-                df_liste = df_liste.append([df], ignore_index=True)
-            print("Utskrift sted")
-            print(df_liste)
-        else:
-            print("ikke et definert valg")
+        print("ikke et definert valg")
  
     
 def slette_avtale():
@@ -427,19 +431,45 @@ def slette_avtale():
     input("Avtale slettet, trykk ENTER for å gå tilbake til hovedmenyen")
 
     hovedmeny(1)
-    
+def filoperasjoner():
+    print("\nHva ønsker du å endre?")
+    valg = int(input('\n1: Skriv avtale til fil\n2: Les avtale fra fil\n3: Kategori til fil\n4: Kategori fra fil\n5: Sted til fil\n6: Sted fra fil\n0: Avslutt\n\n> '))
+    if valg == 1:
+        avtaler_til_fil()
+    elif valg == 2:
+        avtaler_fra_fil()
+    elif valg == 3:
+        lagre_kategorifil()
+    elif valg == 4:
+        åpne_kategori()
+    elif valg == 5:
+        sted_til_fil()
+    elif valg ==6:
+        fil_til_sted()
+    else:
+        hovedmeny(1)
     
 def redigere_avtale():
-    print("Hva ønsker du å endre?: ")
-    valg = str(input('1: Endre avtale\n2: Legge kategori til avtale\n3: Legge sted til avtale\n0: Avslutt\n\n> '))
-    if valg == 0:
-        hovedmeny(1)
-    elif valg == 1:
-        pass
-    elif valg == 2:
-        legg_til_kategori()
-    elif valg ==3:
-        print(nytt_sted())
+
+    while True:
+        print("\nHva ønsker du å endre?")
+        try:
+            valg = int(input('\n1: Endre avtale\n2: Legge kategori til avtale\n3: Legge sted til avtale\n0: Avslutt\n\n> '))
+            if valg == 1:
+                pass
+            elif valg == 2:
+                ny_kategori_til_avtale()
+            elif valg == 3:
+                print(nytt_sted())
+            elif valg > 3 or valg < 0:
+                raise ValueError
+            elif valg == 0:
+                hovedmeny(1)
+        except ValueError:
+            print('Skriv inn et gyldig valg')
+        else:
+            break
+
     global liste
 
     for i in range(len(liste)):
@@ -456,88 +486,46 @@ def redigere_avtale():
     hovedmeny(1)
 
 def hovedmeny(start):
-    os.system('cls')                 
+    #os.system('cls')                 
     while start == 1:
-        print('\nDAT 120 Øving 10 [14.11.2022]\n')
+        print('\n',85*'-','\nDAT 120 Øving 10 [November 2022]\nUiS\nForfattere: Henry Eikeland, Hermann Tveit, Torbjørn Bekkevoll, Christoffer Enoksen\n',85*'-','\n')
         print('1: Skriv inn ny avtale')
         print('2: Skriv ut alle avtaler')
         print('3: Søke i avtaler')
         print('4: Endre en avtale')
             #4.1 Rediger avtale redigere_avtale()
-            #4.2 Legge til kategori legg_til_kategori()
-            #4.3 legge til sted print(nytt_sted())
+            #4.2 Legge kategori til avtale ny_kategori_til_avtale()
+            #4.3 Legge sted til avtale (NY FUNKSJON, EKSISTERER IKKE)
         print('5: Slette en avtale')
-        print('6: Importer avtaler fra fil')
-        print('7: Eksporter avtaler til fil')
-        print('8: Importer kategori fra fil')
-        print('9: Eksporter kategori til fil')
-        print('0: Avslutt')
-        valg=int(input("\nSkriv inn ønsket handling [1-12]:\n> "))
-        if valg == 1:
-            ny_avtale_til_meny()
-        elif valg == 2:
-            skriv_ut_alle()
-        elif valg == 3:
-            liste_filter(avtale_liste)
-        elif valg == 4:
-            redigere_avtale()
-        elif valg == 5:
-            slette_avtale()
-        elif valg == 6:
-            avtaler_fra_fil()
-        elif valg == 7:
-            avtaler_til_fil()
-        elif valg == 8:
-            åpne_kategori()
-        elif valg == 9:
-            lagre_kategorifil()
-        else:
-            print("Ugyldig svar, vennligst bruk 1-6")
+        print('6: Filoperasjoner')
+        print('7: Legg til kategori')
+        print('8: Legg til sted')
+        items_progress_bar = list(range(0, 57))#Liste til progress_bar
+
+        try:
+            valg=int(input("\nSkriv inn ønsket handling [1-8]:\n> "))
+            if valg == 1:
+                ny_avtale_til_meny()
+            elif valg == 2:
+                for item in progress_bar(items_progress_bar, prefix = 'Laster:', suffix = 'Ferdig', length = 50):
+                    time.sleep(0.01)
+                skriv_ut_alle()
+            elif valg == 3:
+                liste_filter(avtale_liste)
+            elif valg == 4:
+                redigere_avtale()
+            elif valg == 5:
+                slette_avtale()
+            elif valg == 6:
+                filoperasjoner()
+            elif valg == 7:
+                legg_til_kategori()
+            elif valg == 8:
+                print(nytt_sted())
+            else:
+                print("Ugyldig svar, vennligst bruk 1-8")
+                input("")
+        except ValueError:
+            print("Ugyldig svar, vennligst bruk 1-8")
+            input("")            
 hovedmeny(1)
-
-
-
-"""
-print("1: Les inn avtaler fra fil")#
-print("2: Skriv avtalene til fil")#
-print("3: Skriv inn en ny avtale")#
-print("4: Skriv ut alle avtalene")#
-print("5: Slette en avtale")#
-print("6: Redigere en avtale")#
-print("7: Søke i avtaler")#
-print("8: Legg til kategori")#
-print("9: Legg til sted")#
-print("10: Lagre kategorifil")#
-print("11: Åpne kategorifil")#
-print("12: Endre kategori til avtale")#
-print("0: Avslutt")
-
-if valg==1:
-    avtaler_fra_fil()
-elif valg==2:
-    avtaler_til_fil()
-elif valg ==3:
-    ny_avtale_til_meny()
-elif valg==4:
-    skriv_ut_alle()
-elif valg==5:
-    slette_avtale()
-elif valg==6:
-    redigere_avtale()
-elif valg==7:
-    liste_filter(avtale_liste)
-elif valg==8:
-    legg_til_kategori()
-elif valg==9:
-    print(nytt_sted())
-elif valg==10:
-    lagre_kategorifil()
-elif valg==11:
-    åpne_kategori()
-elif valg == 12:
-    ny_kategori_til_avtale()
-else:
-    print("Ugyldig svar, vennligst bruk 1-6")
-hovedmeny(1)
-"""
-
