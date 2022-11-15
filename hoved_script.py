@@ -249,19 +249,16 @@ def fil_til_sted():
         input("For å gå tilbake til hovedmenyen, trykk ENTER")
         hovedmeny(1)
 def sted_til_fil():
+    global sted_liste
     print("Du har valgt: xx: Skriv steder til fil")
     fortsette_tilbake = input("Hvis du vil fortsette, trykk ENTER, hvis du vil gå tilbake, tast 0")
     if fortsette_tilbake == "0":
         hovedmeny(1)
     else:
         pass
-        with open('steder.csv', 'a',newline='') as csv_file:
-            writer = csv.writer(csv_file,delimiter =";")
-            for i in sted_liste:
-                writer.writerow([i.navn,i.adresse,i.postnr,i.poststed,i.telefonnr])
-            print ("Skrevet følgende steder til fil: ")
-            for i in (sted_liste):
-                print(i)
+        with open('steder.csv', 'a',newline='') as csv_file: # appender csv filen, endre til w hvis den skal overskrives
+            writer = csv.writer(csv_file, delimiter='\n')
+            writer.writerow(sted_liste)
     input("For å gå tilbake til hovedmenyen, trykk ENTER")
     hovedmeny(1)
 
