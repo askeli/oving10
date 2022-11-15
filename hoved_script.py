@@ -379,52 +379,47 @@ def åpne_kategori():
 
 #Funksjon for å skrive ut lister
 def skriv_ut_alle():
-    print("Du har valgt: 4: Skriv ut alle avtalene")
-    fortsette_tilbake = input("For å fortsette, tast 1, hvis du ønsker å gå tilbake til hovedmenyen, tast 0 :")
-    if fortsette_tilbake == "0":
-        hovedmeny()
+    pass
+    global kategori_liste
+    global avtale_liste
+    global sted_liste
+
+    print("Skriv ut liste:")
+    print("1: Kategori")
+    print("2: Avtale")
+    print("3: Sted")
+    valg = int(input("\n> "))
+    #kategori liste
+    if valg == 1:
+        liste = kategori_liste
+        df_liste = pd.DataFrame(columns = ['ID','navn','prioritet'])  
+        for i in liste:
+            df = pd.DataFrame([[i.id,i.navn,i.prioritet]], columns=(['ID','navn','prioritet']))
+            df_liste = df_liste.append([df], ignore_index=True) 
+        print("Utskrift kategori")
+        print(df_liste) 
+
+    #avtale liste
+    elif valg == 2: 
+        liste = avtale_liste
+        df_liste = pd.DataFrame(columns = ['tittel','sted','starttidspunkt','varighet','kategori'])  
+        for i in liste:
+            df = pd.DataFrame([[i.tittel,i.sted,str(i.starttidspunkt),i.varighet,i.kategori]], columns=('tittel','sted','starttidspunkt','varighet','kategori'))
+            df_liste = df_liste.append([df], ignore_index=True)
+        print("Utskrift Avtaler")
+        print(df_liste)
+
+    #sted liste    
+    elif valg == 3:
+        liste = sted_liste
+        df_liste = pd.DataFrame(columns = ['id','navn','gateadresse','poststed','postnummer'])  
+        for i in liste:
+            df = pd.DataFrame([[i.id, i.navn, i.gateadresse,i.poststed,i.postnummer]], columns=('id','navn','gateadresse','poststed','postnummer'))
+            df_liste = df_liste.append([df], ignore_index=True)
+        print("Utskrift sted")
+        print(df_liste)
     else:
-        pass
-        global kategori_liste
-        global avtale_liste
-        global sted_liste
-
-        print("Skriv ut liste:")
-        print("1: Kategori")
-        print("2: Avtale")
-        print("3: Sted")
-        valg = int(input("valg = "))
-        #kategori liste
-        if valg == 1:
-            liste = kategori_liste
-            df_liste = pd.DataFrame(columns = ['ID','navn','prioritet'])  
-            for i in liste:
-                df = pd.DataFrame([[i.id,i.navn,i.prioritet]], columns=(['ID','navn','prioritet']))
-                df_liste = df_liste.append([df], ignore_index=True) 
-            print("Utskrift kategori")
-            print(df_liste) 
-
-        #avtale liste
-        elif valg == 2: 
-            liste = avtale_liste
-            df_liste = pd.DataFrame(columns = ['tittel','sted','starttidspunkt','varighet','kategori'])  
-            for i in liste:
-                df = pd.DataFrame([[i.tittel,i.sted,str(i.starttidspunkt),i.varighet,i.kategori]], columns=('tittel','sted','starttidspunkt','varighet','kategori'))
-                df_liste = df_liste.append([df], ignore_index=True)
-            print("Utskrift Avtaler")
-            print(df_liste)
-
-        #sted liste    
-        elif valg == 3:
-            liste = sted_liste
-            df_liste = pd.DataFrame(columns = ['id','navn','gateadresse','poststed','postnummer'])  
-            for i in liste:
-                df = pd.DataFrame([[i.id, i.navn, i.gateadresse,i.poststed,i.postnummer]], columns=('id','navn','gateadresse','poststed','postnummer'))
-                df_liste = df_liste.append([df], ignore_index=True)
-            print("Utskrift sted")
-            print(df_liste)
-        else:
-            print("ikke et definert valg")
+        print("ikke et definert valg")
  
     
 def slette_avtale():
@@ -474,6 +469,8 @@ def redigere_avtale():
                 print(nytt_sted())
             elif valg > 3 or valg < 0:
                 raise ValueError
+            elif valg == 0:
+                hovedmeny(1)
         except ValueError:
             print('Skriv inn et gyldig valg')
         else:
@@ -514,10 +511,10 @@ def hovedmeny(start):
         try:
             valg=int(input("\nSkriv inn ønsket handling [1-8]:\n> "))
             if valg == 1:
-                for item in progress_bar(items_progress_bar, prefix = 'Progress:', suffix = 'Complete', length = 50):
-                    time.sleep(0.01)
                 ny_avtale_til_meny()
             elif valg == 2:
+                for item in progress_bar(items_progress_bar, prefix = 'Laster:', suffix = 'Ferdig', length = 50):
+                    time.sleep(0.01)
                 skriv_ut_alle()
             elif valg == 3:
                 liste_filter(avtale_liste)
