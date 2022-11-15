@@ -482,7 +482,7 @@ def redigere_avtale():
 def hovedmeny(start):
     #os.system('cls')                 
     while start == 1:
-        print('\nDAT 120 Øving 10 [14.11.2022]\n')
+        print('\n',85*'-','\nDAT 120 Øving 10 [November 2022]\nUiS\nForfattere: Henry Eikeland, Hermann Tveit, Torbjørn Bekkevoll, Christoffer Enoksen\n',85*'-','\n')
         print('1: Skriv inn ny avtale')
         print('2: Skriv ut alle avtaler')
         print('3: Søke i avtaler')
