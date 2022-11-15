@@ -462,8 +462,10 @@ def redigere_avtale():
                 pass
             elif valg == 2:
                 ny_kategori_til_avtale()
+                hovedmeny(1)
             elif valg == 3:
                 print(nytt_sted())
+                hovedmeny(1)
             elif valg > 3 or valg < 0:
                 raise ValueError
             elif valg == 0:
