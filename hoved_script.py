@@ -429,15 +429,19 @@ def slette_avtale():
     hovedmeny(1)
 def filoperasjoner():
     print("\nHva ønsker du å endre?")
-    valg = str(input('\n1: Skriv avtale til fil\n2: Les avtale fra fil\n3: Sted fra fil\n4 Sted til fil\n0: Avslutt\n\n> '))
+    valg = str(input('\n1: Skriv avtale til fil\n2: Les avtale fra fil\n3: Kategori til fil\n4: Kategori fra fil\n5: Sted til fil\n6: Sted fra fil\n0: Avslutt\n\n> '))
     if valg == 1:
-        skriv_til_fil()
+        avtaler_til_fil()
     elif valg == 2:
-        sted_til_fil()
-    elif valg ==3:
-        sted_fra_fil()
+        avtaler_fra_fil()
+    elif valg == 3:
+        lagre_kategorifil()
     elif valg == 4:
+        åpne_kategori()
+    elif valg == 5:
         sted_til_fil()
+    elif valg ==6:
+        sted_fra_fil()
     else:
         hovedmeny(1)
     
