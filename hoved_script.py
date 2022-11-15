@@ -446,16 +446,24 @@ def filoperasjoner():
         hovedmeny(1)
     
 def redigere_avtale():
-    print("\nHva ønsker du å endre?")
-    valg = str(input('\n1: Endre avtale\n2: Legge kategori til avtale\n3: Legge sted til avtale\n0: Avslutt\n\n> '))
-    if valg == 1:
-        pass
-    elif valg == 2:
-        ny_kategori_til_avtale()
-    elif valg ==3:
-        print(nytt_sted())
-    else:
-        hovedmeny(1)
+
+    while True:
+        print("\nHva ønsker du å endre?")
+        try:
+            valg = int(input('\n1: Endre avtale\n2: Legge kategori til avtale\n3: Legge sted til avtale\n0: Avslutt\n\n> '))
+            if valg == 1:
+                pass
+            elif valg == 2:
+                ny_kategori_til_avtale()
+            elif valg == 3:
+                print(nytt_sted())
+            elif valg > 3 or valg < 0:
+                raise ValueError
+        except ValueError:
+            print('Skriv inn et gyldig valg')
+        else:
+            break
+
     global liste
 
     for i in range(len(liste)):
