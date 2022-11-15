@@ -472,7 +472,7 @@ def redigere_avtale():
     hovedmeny(1)
 
 def hovedmeny(start):
-    os.system('cls')                 
+    #os.system('cls')                 
     while start == 1:
         print('\nDAT 120 Øving 10 [14.11.2022]\n')
         print('1: Skriv inn ny avtale')
