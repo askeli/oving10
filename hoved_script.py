@@ -75,7 +75,7 @@ class Sted():
 #Unntakshåndtering
 class GatenavnError(Exception):
     pass
-class EtternavnError(Exception):
+class StedsnavnError(Exception):
     pass     
 
 
@@ -103,31 +103,31 @@ def liste_filter(avtale_liste):
             return print("Søkeresultat som inneholder '%s': \n"%(lete_streng),data_frame[data_frame['%s'%(gyldige_kolonner[kolonne-1])].str.contains(lete_streng)])
 
 #Christoffer
-#Denne funksjonen tar inn *etternavn, *gatenavn og *postnummer. Poststed og kommunenummer (id) er hentet fra et xlsx ark lastet ned fra bring.no
+#Denne funksjonen tar inn *stedsnavn, *gatenavn og *postnummer. Poststed og kommunenummer (id) er hentet fra et xlsx ark lastet ned fra bring.no
 postnummer_register_df = pd.read_excel('ressursfiler\Postnummerregister-Excel.xlsx', sheet_name=0)
 
 def nytt_sted():
     print('\033[1m','\nLegge til nytt sted\n','\033[0m')
     while True:
         try:
-            etternavn = input('Skriv inn etternavn:\n> ')
+            stedsnavn = input('Skriv inn stedsnavn:\n> ')
             gatenavn = input('Skriv inn gatenavn:\n> ')
             postnummer = int(input('Skriv inn postnummer:\n> '))
             poststed = postnummer_register_df[(postnummer_register_df['Postnummer'] == postnummer)]['Poststed'].item()
             kommunenummer = postnummer_register_df[(postnummer_register_df['Postnummer'] == postnummer)]['Kommunenummer'].item()
-            if etternavn.isalpha() is not True:
-                raise EtternavnError
+            if stedsnavn.isalpha() is not True:
+                raise StedsnavnError
             elif gatenavn.isalpha() is not True:
                 raise GatenavnError
-        except EtternavnError:
-            print('Vennligst skriv inn et gyldig etternavn. ')
+        except StedsnavnError:
+            print('Vennligst skriv inn et gyldig stedsnavn. ')
         except GatenavnError:
             print('Vennligst skriv inn et gyldig gatenavn. ')
         except ValueError:
             print('Vennligst skriv inn et gyldig postnummer. ')
         else:
             break
-    return Sted(kommunenummer, etternavn, gatenavn, poststed, postnummer)
+    return Sted(kommunenummer, stedsnavn, gatenavn, poststed, postnummer)
 
 
 #Christoffer
@@ -293,11 +293,11 @@ def ny_avtale_til_meny():
     
 #Funksjon for å lage en ny kategori 
 def legg_til_kategori():
-    bruker_id = input("skriv inn id: ") 
-    navn = input("skriv inn navn: ")
+    bruker_id = input("Skriv inn id: ") 
+    navn = input("Skriv inn navn: ")
     prioritet = ""
     while prioritet == "":
-        prioritet = input("skriv inn prioritet(1-2-3): ")
+        prioritet = input("Skriv inn prioritet(1-2-3): ")
         try:
             prioritet = int(prioritet)
             if prioritet < 1 or prioritet > 3:
@@ -305,16 +305,16 @@ def legg_til_kategori():
                 raise ValueError                
         except ValueError:
             prioritet = ""
-            print("ikke et gyldig tall")
+            print("Ikke et gyldig tall")
 
     print("Bekreft kategori: ", Kategori(bruker_id, navn, prioritet))
     bekreftet = input("Ja/Nei:").casefold()  
     if "ja" in bekreftet:
-        print("kategori lagret")
+        print("Kategori lagret")
         kategori_liste.append(Kategori(bruker_id, navn, prioritet))            
         return (Kategori(bruker_id, navn, prioritet))
     else:
-        print("kategori ikke lagret")
+        print("Kategori ikke lagret")
         
 
 #Funksjon for å lagre kategori liste til fil
