@@ -237,25 +237,18 @@ def avtaler_til_fil():
     
 ## fil_til_Sted funksjon
 def fil_til_sted():
-    print("Du har valgt: xx: Skriv inn steder fra fil")
+    print("Du har valgt: xx: Skriv steder til fil")
     fortsette_tilbake = input("Hvis du vil fortsette, trykk ENTER, hvis du vil gå tilbake, tast 0")
     if fortsette_tilbake == "0":
         hovedmeny(1)
     else:
         pass
-        tkinter.Tk().withdraw()
-        filnavn = filedialog.askopenfilename()
-        global sted_liste  
-        sted_liste.clear()
-        with open(filnavn, 'r') as csv_file:
-            reader = csv.reader(csv_file,delimiter=';')
-            for row in reader:
-                sted_liste.append(Sted(row[0],row[1],row[2],row[3],row[4]))
-        print ("Lest følgende steder fra fil: ")
-        for i in (sted_liste):
-            print(i)
-        input("For å gå tilbake til hovedmenyen, trykk ENTER")
-        hovedmeny(1)
+        a_file = open("steder.csv", "r")
+        lines = a_file.readlines()
+        for line in lines:
+            print(line)
+    input("For å gå tilbake til hovedmenyen, trykk ENTER")
+    hovedmeny(1)
 def sted_til_fil():
     global sted_liste
     print("Du har valgt: xx: Skriv steder til fil")
@@ -276,10 +269,11 @@ def ny_avtale_til_meny():
     bekreftet = "" 
     while bekreftet != "Ja":
         tittel = input("Ny avtale\nOppgi tittel:")
-        sted = input("Oppgi sted:")
+        for (i, item) in enumerate(sted_liste, start=0):
+            print(i, item)
+        sted = sted_liste[int(input("Oppgi sted:"))]
         print("Oppgi tidpunkt(ÅÅÅÅ-MM-DD TT:MM:SS):")
         starttidspunkt = ""
-
         while starttidspunkt == "":
             try:
                 starttidspunkt = datetime(int(input("ÅÅÅÅ:")),int(input("MM:")),int(input("DD:")),int(input("TT:")),int(input("MM:")))                
