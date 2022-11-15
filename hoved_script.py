@@ -205,9 +205,47 @@ def avtaler_til_fil():
     input("For å gå tilbake til hovedmenyen, trykk ENTER")
     hovedmeny(1)
     
+## fil_til_Sted funksjon
+def fil_til_sted():
+    print("Du har valgt: xx: Skriv inn steder fra fil")
+    fortsette_tilbake = input("Hvis du vil fortsette, trykk ENTER, hvis du vil gå tilbake, tast 0")
+    if fortsette_tilbake == "0":
+        hovedmeny(1)
+    else:
+        pass
+        tkinter.Tk().withdraw()
+        filnavn = filedialog.askopenfilename()
+        global sted_liste  
+        sted_liste.clear()
+        with open(filnavn, 'r') as csv_file:
+            reader = csv.reader(csv_file,delimiter=';')
+            for row in reader:
+                sted_liste.append(Sted(row[0],row[1],row[2],row[3],row[4]))
+        print ("Lest følgende steder fra fil: ")
+        for i in (sted_liste):
+            print(i)
+        input("For å gå tilbake til hovedmenyen, trykk ENTER")
+        hovedmeny(1)
+def sted_til_fil():
+    print("Du har valgt: xx: Skriv steder til fil")
+    fortsette_tilbake = input("Hvis du vil fortsette, trykk ENTER, hvis du vil gå tilbake, tast 0")
+    if fortsette_tilbake == "0":
+        hovedmeny(1)
+    else:
+        pass
+        with open('steder.csv', 'a',newline='') as csv_file:
+            writer = csv.writer(csv_file,delimiter =";")
+            for i in sted_liste:
+                writer.writerow([i.navn,i.adresse,i.postnr,i.poststed,i.telefonnr])
+            print ("Skrevet følgende steder til fil: ")
+            for i in (sted_liste):
+                print(i)
+    input("For å gå tilbake til hovedmenyen, trykk ENTER")
+    hovedmeny(1)
 
 
-def ny_avtale_til_meny():
+
+        
     print("Du har valgt: 3: Skriv inn en ny avtale")
     fortsette_tilbake = input("For å fortsette, trykk ENTER, hvis du ønsker å gå tilbake til hovedmenyen, tast 0 :")
     if fortsette_tilbake == "0":
