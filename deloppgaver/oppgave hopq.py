@@ -173,3 +173,29 @@ for item in progress_bar(items_progress_bar, prefix = 'Progress:', suffix = 'Com
     # Do stuff...
     time.sleep(0.01)
 
+
+
+
+else:
+    try:
+        valg = int(input('Ønsker du å\n1: Legge til\n2: Overskrive\n> '))
+    except ValueError:
+        print('Skriv inn en gyldig verdi')
+    if valg == 1:
+        #Gjør någe
+    elif valg == 2:
+        #Gjør någe aent
+    elif valg > 0 and valg < 0:
+        raise ValueError
+
+     
+
+    
+
+#OPPGAVE OOOOO
+
+for i in range(0, len(kategori_liste)):
+    indeks = indeks + 1
+
+def __str__(self):
+    return f"{self.tittel}, {self.sted}, {self.starttidspunkt}, {self.varighet} min, {self.kategori[i].id}"
